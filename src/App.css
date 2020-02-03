@@ -6,20 +6,21 @@ html, body, #root{
 .App {
   /* text-align: center; */
   height: 100%;
+  background-color: black;
+  color:rgb(129, 129, 2)
 }
 
 .Gameboard{
-  background-color: cornflowerblue;
   height: 100%;
   display: flex; 
   flex-direction: column;
   justify-content: space-around;  
+  font-size: 2rem;
 }
 
 .TopicRow{ 
   display: flex; 
   justify-content: space-around;  
-  color: yellow;
   text-align: center;
   /* border-style: solid;
   border-width: 1px;
@@ -38,6 +39,20 @@ html, body, #root{
   /* border-style: solid;
   border-width: 1px;
   border-color: tomato; */
+}
+
+.Question{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+}
+
+.Cell > a{
+  color: rgb(129, 129, 2);
+  text-decoration: none;
 }
 
 .App-logo {
