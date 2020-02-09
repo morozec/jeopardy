@@ -8,6 +8,7 @@ import {
   Route
 } from "react-router-dom";
 import Question from './components/Question';
+import Registration from './components/Registration';
 
 function App() {
   // const testQuestion = {
@@ -20,8 +21,10 @@ function App() {
 
         <Switch>
           <Route exact path="/question" render={(props) => <Question {...props} xxx={true} />} />
+          <Route exact path="/board" render={(props) => <Gameboard {...props} />} />
+
           <Route path="/">
-            <Gameboard />
+            <Registration />
           </Route>
         </Switch>
       </div>

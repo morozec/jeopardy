@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 function TopicRow(props) {
-    const { topicData } = props;
+    const { topicData, players, handlePlayerAnswer } = props;
     const { topic, questions } = topicData;
 
     const values = [100, 200, 300, 400, 500];
@@ -12,7 +12,10 @@ function TopicRow(props) {
             <Link to={{
                 pathname: '/question',
                 topic: topic,
-                text: questions[index]
+                text: questions[index],
+                value: values[index],
+                players: players,
+                handlePlayerAnswer : handlePlayerAnswer
             }} >{v}</Link>
         </div>)
 

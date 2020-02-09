@@ -7,7 +7,7 @@ html, body, #root{
   /* text-align: center; */
   height: 100%;
   background-color: black;
-  color:rgb(129, 129, 2)
+  color:goldenrod
 }
 
 .Gameboard{
@@ -16,6 +16,28 @@ html, body, #root{
   flex-direction: column;
   justify-content: space-around;  
   font-size: 2rem;
+}
+
+.player-info-container{
+  /* margin-top: auto; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: blue;
+}
+
+.player-info{
+  display: flex;
+}
+
+.player-name{
+  /* margin-top: auto;
+  margin-bottom: auto; */
+}
+
+.player-score{
+  margin-left: 2rem;
+  color: white;
 }
 
 .TopicRow{ 
@@ -45,13 +67,78 @@ html, body, #root{
   height: 100%;
   display: flex;
   flex-direction: column;
+  /* justify-content:center; */
+  align-items: center;
+  font-size: 5rem;
+}
+
+.question-topic{
+  /* flex-grow: 1; */
+  margin-top: auto;
+}
+
+.question-text{
+  /* flex-grow: 1; */
+  margin-bottom: auto;
+}
+
+.player-action-container{
+  /* margin-top: auto; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: blue;
+}
+
+
+.player-action{
+  font-size: 1rem;
+  display: flex;
+}
+
+.pa-button{
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.Registration{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 5rem;
 }
 
+.Registration > a{
+  color: goldenrod;
+  text-decoration: none;
+}
+
+.plus-img{
+   width:20vmin;
+   height: 20vmin;
+   cursor: pointer;
+}
+
+.minus-img{
+  width:5vmin;
+  height: 5vmin;
+  margin: 0.5rem;
+  cursor: pointer;
+}
+
+.minus-img.disabled{
+  opacity: 0.5;
+}
+
+.player-input{
+  display: flex;
+  align-items: center;
+}
+
 .Cell > a{
-  color: rgb(129, 129, 2);
+  color: goldenrod;
   text-decoration: none;
 }
 
