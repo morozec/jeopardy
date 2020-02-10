@@ -2,21 +2,23 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 function TopicRow(props) {
-    const { topicData, players, handlePlayerAnswer } = props;
+    const { topicData, players, handlePlayerAnswer, handleQuestionSelect } = props;
     const { topic, questions } = topicData;
 
     const values = [100, 200, 300, 400, 500];
 
     const valuesCells = values.map((v, index) =>
-        <div key={index} className="Cell">
-            <Link to={{
+        <div key={index} className="Cell" onClick={() => handleQuestionSelect(topic, questions[index], values[index])}>
+            {v}
+
+            {/* <Link to={{
                 pathname: '/question',
                 topic: topic,
                 text: questions[index],
                 value: values[index],
                 players: players,
                 handlePlayerAnswer : handlePlayerAnswer
-            }} >{v}</Link>
+            }} >{v}</Link> */}
         </div>)
 
     return (

@@ -22,18 +22,20 @@ html, body, #root{
   /* margin-top: auto; */
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   background-color: blue;
 }
 
+
 .player-info{
+  flex-grow: 1;
   display: flex;
+  justify-content: center;
 }
 
-.player-name{
-  /* margin-top: auto;
-  margin-bottom: auto; */
+.player-info.is-current{
+  background-color: greenyellow;
 }
+
 
 .player-score{
   margin-left: 2rem;
@@ -67,20 +69,19 @@ html, body, #root{
   height: 100%;
   display: flex;
   flex-direction: column;
-  /* justify-content:center; */
+  justify-content:center;
   align-items: center;
   font-size: 5rem;
 }
 
-.question-topic{
-  /* flex-grow: 1; */
-  margin-top: auto;
+.content{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-.question-text{
-  /* flex-grow: 1; */
-  margin-bottom: auto;
-}
+
 
 .player-action-container{
   /* margin-top: auto; */
@@ -99,6 +100,10 @@ html, body, #root{
 .pa-button{
   margin-left: 1rem;
   margin-right: 1rem;
+  cursor: pointer;
+
+  width:5vmin;
+  height: 5vmin;
 }
 
 .Registration{
@@ -128,13 +133,17 @@ html, body, #root{
   cursor: pointer;
 }
 
-.minus-img.disabled{
+.disabled{
   opacity: 0.5;
 }
 
 .player-input{
   display: flex;
   align-items: center;
+}
+
+.Cell{
+  cursor: pointer;
 }
 
 .Cell > a{

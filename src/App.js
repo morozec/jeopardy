@@ -17,15 +17,18 @@ function App() {
   // };
   return (
     <Router>
+
       <div className="App">
 
         <Switch>
-          <Route exact path="/question" render={(props) => <Question {...props} xxx={true} />} />
-          <Route exact path="/board" render={(props) => <Gameboard {...props} />} />
+          {/* <Route exact path="/question" render={(props) => <Question {...props} xxx={true} />} /> */}
 
-          <Route path="/">
+          <Route exact path="/reg">
             <Registration />
           </Route>
+
+          <Route path="/" render={(props) => <Gameboard {...props} />} />         
+
         </Switch>
       </div>
     </Router>

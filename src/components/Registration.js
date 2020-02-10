@@ -42,7 +42,7 @@ export default function Registration() {
             {playersInputs}
             <img src={plus} alt='add player' className='plus-img' onClick={handlePlus} />
             <Link to={{
-                pathname: '/board',
+                pathname: '/',
                 playersNames: players
             }}>Начать игру</Link>
         </div>
