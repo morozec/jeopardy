@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function Question(props){
-    const {topic, text, value} = props.question
+    const {topic, text} = props.question
 
 
     // const playersActions = players.map((p, i) => (

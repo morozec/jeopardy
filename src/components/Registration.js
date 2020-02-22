@@ -2,9 +2,14 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import plus from './../img/plus.png'
 import minus from './../img/minus.png'
+import { Modal, Button } from 'react-bootstrap';
 
 export default function Registration() {
     const [players, setPlayers] = useState(['Игрок 1'])
+    const [isDbSource, setIsDbSource] = useState(true)
+    const [showGames, setShowGames] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [packages, setPackages] = useState([])
 
     const handleChange = (newValue, index) => {
         const newPlayers = Object.assign([], players)
@@ -25,6 +30,10 @@ export default function Registration() {
         setPlayers(newPlayers)
     }
 
+    const handleIsDbSourceChange = (e) => {
+        setIsDbSource(e.target.checked)
+    }
+
     const playersInputs = players.map((p, i) => (
         <div className="player-input" key={i}>
             <input value={p} autoFocus={i === 0}
@@ -37,14 +46,64 @@ export default function Registration() {
 
     )
 
+    const handleShowGames = () => {
+        setIsLoading(true)
+        setShowGames(true)
+
+        const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+        const groupsApi = 'http://api.baza-voprosov.ru/groups/SVOYAK';
+        fetch(corsProxy + groupsApi)
+            .then(response => response.json())
+            .then(obj => {
+                setPackages(obj.packages);
+            })
+            .finally(() => setIsLoading(false))
+    }
+
+    const packagesList = packages.map((p) =>
+        <div key={p.id}>
+            <Link
+                to={{
+                    pathname: '/',
+                    playersNames: players,
+                    packageId: p.id
+                }}>
+                {p.title}
+            </Link>
+        </div>
+    )
+
+    const handleHideGames = () => setShowGames(false)
+
+
     return (
         <div className='Registration'>
             {playersInputs}
             <img src={plus} alt='add player' className='plus-img' onClick={handlePlus} />
-            <Link to={{
+            <label>Использовать базу
+                <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} disabled={true} />
+            </label>
+
+            <Button onClick={handleShowGames}>Начать игру</Button>
+
+
+            <Modal show={showGames} onHide={handleHideGames} >
+                <Modal.Header closeButton>
+                    <Modal.Title>Список игр</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className='packages-list'>{isLoading ? 'Loading...' : packagesList}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleHideGames}>
+                        Отмена
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* <Link to={{
                 pathname: '/',
-                playersNames: players
-            }}>Начать игру</Link>
+                playersNames: players,
+                isDbSource:isDbSource
+            }}>Начать игру</Link> */}
         </div>
     )
 }

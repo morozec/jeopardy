@@ -185,3 +185,8 @@ html, body, #root{
     transform: rotate(360deg);
   }
 }
+
+.packages-list{
+  height: 75vh;
+  overflow-y: auto;
+}

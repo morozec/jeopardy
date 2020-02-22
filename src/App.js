@@ -7,7 +7,6 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import Question from './components/Question';
 import Registration from './components/Registration';
 
 function App() {

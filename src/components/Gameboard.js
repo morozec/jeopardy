@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import TopicRow from './TopicRow';
 import TopicData from '../data/Topic.data';
 import Player from '../data/Players';
@@ -7,19 +7,24 @@ import Question from './Question';
 import correctImg from './../img/correct.png'
 import wrongImg from './../img/wrong.png'
 
+
 function Gameboard(props) {
 
-    const { playersNames } = props.location
+    const { playersNames, packageId } = props.location
+    console.log(packageId)
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map(pn => new Player(pn, 0)) : [])
     const [curPlayerIndex, setCurPlayerIndex] = useState(0)
     const [curQuestion, setCurQuestion] = useState(undefined)
     const [wrongAnswerIndexes, setWrongAnswerIndexes] = useState([])
+   
 
     if (!playersNames) {
         props.history.push('/reg')
         return null
     }
+
+   
 
 
     // useEffect(() => {
@@ -79,6 +84,7 @@ function Gameboard(props) {
     // const listItems = topics.map((q, index) =>
     //     <li>{values[index]}-{q}</li>)
 
+  
     return (
         <div className='Gameboard' >
             <div className='content'>
@@ -88,6 +94,8 @@ function Gameboard(props) {
             <div className='player-info-container'>
                 {playersScores}
             </div>
+
+
         </div>
     )
 }

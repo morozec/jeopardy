@@ -1,8 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 
 function TopicRow(props) {
-    const { topicData, players, handlePlayerAnswer, handleQuestionSelect } = props;
+    const { topicData, handleQuestionSelect } = props;
     const { topic, questions } = topicData;
 
     const values = [100, 200, 300, 400, 500];
