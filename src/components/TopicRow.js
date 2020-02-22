@@ -1,8 +1,7 @@
 import React from 'react'
 
 function TopicRow(props) {
-    const { topicData, handleQuestionSelect } = props;
-    const { topic, questions } = topicData;
+    const { topic, questions, handleQuestionSelect } = props;
 
     const values = [100, 200, 300, 400, 500];
 

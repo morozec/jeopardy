@@ -98,12 +98,6 @@ export default function Registration() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            {/* <Link to={{
-                pathname: '/',
-                playersNames: players,
-                isDbSource:isDbSource
-            }}>Начать игру</Link> */}
         </div>
     )
 }
