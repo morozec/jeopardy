@@ -69,7 +69,8 @@ export default function GameBoard(props) {
                 {selectedQuestionIndex !== -1 &&
                     <Question
                         topic={topics[selectedTopicIndex]}
-                        question={questions[selectedTopicIndex][selectedQuestionIndex]} />}
+                        question={questions[selectedTopicIndex][selectedQuestionIndex]}
+                        answer={answers[selectedTopicIndex][selectedQuestionIndex]} />}
             </div>
 
             <Score
