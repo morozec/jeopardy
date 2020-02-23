@@ -24,7 +24,7 @@ function MainBoard(props) {
     const TOPICS_COUNT = 18
     const SHOW_ROUND_TIME = 1000
     const SHOW_ALL_TOPICS_TIME = 1000
-    
+
 
     useEffect(() => {
         if (!packageId) return
@@ -72,7 +72,10 @@ function MainBoard(props) {
         const newPlayers = Object.assign([], players)
         if (isCorrect) {
             newPlayers[playerIndex].score += addScore
-            newPlayers[playerIndex].isActive = true
+
+            for (let i = 0; i < newPlayers.length; ++i) {
+                newPlayers[i].isActive = (i === playerIndex)
+            }
         } else {
             newPlayers[playerIndex].score -= addScore
         }
