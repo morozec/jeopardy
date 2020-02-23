@@ -58,12 +58,25 @@ html, body, #root{
   border-color: tomato; */
 }
 
-.TopicRow > .Cell{
+.TopicRow > .cell-value{
   flex: 1;
   /* border-style: solid;
   border-width: 1px;
   border-color: tomato; */
+  cursor: pointer;
 }
+
+.TopicRow > .cell-empty{
+  flex: 1; 
+}
+
+
+
+.TopicRow > .cell-value > a{
+  color: goldenrod;
+  text-decoration: none;
+}
+
 
 .Question{
   height: 100%;
@@ -142,14 +155,6 @@ html, body, #root{
   align-items: center;
 }
 
-.Cell{
-  cursor: pointer;
-}
-
-.Cell > a{
-  color: goldenrod;
-  text-decoration: none;
-}
 
 
 .packages-list{
@@ -165,6 +170,13 @@ html, body, #root{
 }
 
 .topics-grid-cell{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.round{
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

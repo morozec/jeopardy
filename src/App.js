@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Gameboard from './components/Gameboard';
+import MainBoard from './components/MainBoard';
 
 import {
   BrowserRouter as Router,
@@ -8,7 +8,6 @@ import {
   Route
 } from "react-router-dom";
 import Registration from './components/Registration';
-import TopicsTable from './components/TopicsTable';
 
 function App() {
   // const testQuestion = {
@@ -27,9 +26,7 @@ function App() {
             <Registration />
           </Route>
 
-          <Route exact path="/topics" render={(props)=><TopicsTable {...props} />}/>
-
-          <Route path="/" render={(props) => <Gameboard {...props} />} />         
+          <Route path="/" render={(props) => <MainBoard {...props} />} />         
 
         </Switch>
       </div>

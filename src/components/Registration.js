@@ -64,7 +64,7 @@ export default function Registration() {
         <div key={p.id}>
             <Link
                 to={{
-                    pathname: '/topics',
+                    pathname: '/',
                     playersNames: players,
                     packageId: p.id
                 }}>
