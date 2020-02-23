@@ -21,6 +21,7 @@ function MainBoard(props) {
     const [round, setRound] = useState(0)
     const [showRound, setShowRound] = useState(false)
 
+    const ROUNDS_COUNT = 3
     const TOPICS_COUNT = 18
     const SHOW_ROUND_TIME = 1000
     const SHOW_ALL_TOPICS_TIME = 1000
@@ -63,6 +64,19 @@ function MainBoard(props) {
 
     }, [packageId])
 
+    const updateRound = () => {
+        if (round < ROUNDS_COUNT){
+            setRound(round + 1)
+            setShowRound(true)
+
+            setTimeout(() => {
+                setShowRound(false)
+            }, SHOW_ROUND_TIME)
+        }else{
+            alert('Игра окончена')
+        }
+    }
+
     if (!playersNames) {
         props.history.push('/reg')
         return null
@@ -98,6 +112,7 @@ function MainBoard(props) {
                         answers={answers}
                         updateScore={updateScore}
                         round={round}
+                        updateRound = {updateRound}
                     />
 
     )

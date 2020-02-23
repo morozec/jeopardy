@@ -10,7 +10,7 @@ export default function GameBoard(props) {
     const QUESTIONS_COUNT = 5
     const VALUES = [100, 200, 300, 400, 500]
 
-    const { players, updateScore, round } = props
+    const { players, updateScore, round, updateRound } = props
 
     const start = ROUND_TOPICS_COUNT * (round - 1)
     const end = ROUND_TOPICS_COUNT * (round)
@@ -45,6 +45,9 @@ export default function GameBoard(props) {
             const newPlayedQuestions = playedQuestions.map((row) => row.slice()) //full copy
             newPlayedQuestions[selectedTopicIndex][selectedQuestionIndex] = 1
             setPlayedQuestions(newPlayedQuestions)
+            if (newPlayedQuestions.every(row => row.every(el => el === 1))){
+                updateRound()
+            }
         } else {
             const newWrongAnswerIndexes = Object.assign([], wrongAnswerIndexes)
             newWrongAnswerIndexes.push(playerIndex)
