@@ -10,7 +10,7 @@ export default function GameBoard(props) {
     const QUESTIONS_COUNT = 5
     const VALUES = [100, 200, 300, 400, 500]
 
-    const { players, updateScore, round, updateRound } = props
+    const { players, updateScore, round, updateRound, isLimitedTime, limitedTime } = props
 
     const start = ROUND_TOPICS_COUNT * (round - 1)
     const end = ROUND_TOPICS_COUNT * (round)
@@ -73,7 +73,9 @@ export default function GameBoard(props) {
                     <Question
                         topic={topics[selectedTopicIndex]}
                         question={questions[selectedTopicIndex][selectedQuestionIndex]}
-                        answer={answers[selectedTopicIndex][selectedQuestionIndex]} />}
+                        answer={answers[selectedTopicIndex][selectedQuestionIndex]}
+                        isLimitedTime = {isLimitedTime}
+                        limitedTime = {limitedTime} />}
             </div>
 
             <Score

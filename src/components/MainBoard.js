@@ -6,7 +6,7 @@ import GameBoard from './GameBoard'
 
 function MainBoard(props) {
 
-    const { playersNames, packageId } = props.location
+    const { playersNames, packageId, isLimitedTime, limitedTime } = props.location
     // console.log(packageId)
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map((pn, i) => new Player(pn, 0, i === 0)) : [])
@@ -113,6 +113,8 @@ function MainBoard(props) {
                         updateScore={updateScore}
                         round={round}
                         updateRound = {updateRound}
+                        isLimitedTime = {isLimitedTime}
+                        limitedTime = {limitedTime}
                     />
 
     )

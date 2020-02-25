@@ -7,6 +7,8 @@ import { Modal, Button } from 'react-bootstrap';
 export default function Registration() {
     const [players, setPlayers] = useState(['Игрок 1'])
     const [isDbSource, setIsDbSource] = useState(true)
+    const [isLimitedTime, setIsLimitedTime] = useState(false)
+    const [limitedTime, setLimitedTime] = useState(20)
     const [showGames, setShowGames] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [packages, setPackages] = useState([])
@@ -32,6 +34,14 @@ export default function Registration() {
 
     const handleIsDbSourceChange = (e) => {
         setIsDbSource(e.target.checked)
+    }
+
+    const handleIsLimitedTimeChanged = (e) => {
+        setIsLimitedTime(e.target.checked)
+    }
+
+    const handleLimitiedTimeChanged = (e) => {
+        setLimitedTime(e.target.value)
     }
 
     const playersInputs = players.map((p, i) => (
@@ -66,7 +76,9 @@ export default function Registration() {
                 to={{
                     pathname: '/',
                     playersNames: players,
-                    packageId: p.id
+                    packageId: p.id,
+                    isLimitedTime: isLimitedTime,
+                    limitedTime: limitedTime
                 }}>
                 {p.title}
             </Link>
@@ -83,6 +95,16 @@ export default function Registration() {
             <label>Использовать базу
                 <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} disabled={true} />
             </label>
+
+            <label>Ограниченное время на ответ
+                <input type='checkbox' checked={isLimitedTime} onChange={handleIsLimitedTimeChanged} />
+            </label>
+
+            {isLimitedTime &&
+                <label>Секунд на ответ 
+                    <input type='text' value={limitedTime} onChange={handleLimitiedTimeChanged} />
+                </label>
+            }
 
             <Button onClick={handleShowGames}>Начать игру</Button>
 
