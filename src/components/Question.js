@@ -7,9 +7,6 @@ export default function Question(props) {
     const [timeLeft, setTimeLeft] = useState(props.limitedTime)
     const [isPause, setIsPause] = useState(false)
 
-    const timer = () => {
-        setTimeLeft(timeLeft - 1)
-    }
 
     useEffect(() => {
         if (timeLeft <= 0) {
@@ -17,8 +14,8 @@ export default function Question(props) {
             return
         }
         if (isPause) return
-        const timedId = setTimeout(timer, 1000)
-        return () => clearInterval(timedId)
+        const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+        return () => clearInterval(timerId)
     }, [timeLeft, isPause])
 
     const handlePauseClick = () => {
