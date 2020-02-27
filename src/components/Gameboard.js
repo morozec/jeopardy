@@ -25,8 +25,8 @@ export default function GameBoard(props) {
 
     const [selectedTopicIndex, setSelectedTopicIndex] = useState(-1)
     const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(-1)
-
     const [wrongAnswerIndexes, setWrongAnswerIndexes] = useState([])
+    const [isQuestionAnswered, setIsQuestionAnswered] = useState(false)
 
     const handleQuestionSelect = (topicIndex, questionIndex) => {
         setSelectedTopicIndex(topicIndex)
@@ -34,20 +34,21 @@ export default function GameBoard(props) {
     }
 
     const handlePlayerAnswer = (playerIndex, isCorrect) => {
-        if (wrongAnswerIndexes.includes(playerIndex)) return
+        if (wrongAnswerIndexes.includes(playerIndex) || isQuestionAnswered) return
         const addScore = VALUES[selectedQuestionIndex]
         updateScore(playerIndex, addScore, isCorrect)
 
         if (isCorrect) {
-            setSelectedTopicIndex(-1)
-            setSelectedQuestionIndex(-1)
-            setWrongAnswerIndexes([])
-            const newPlayedQuestions = playedQuestions.map((row) => row.slice()) //full copy
-            newPlayedQuestions[selectedTopicIndex][selectedQuestionIndex] = 1
-            setPlayedQuestions(newPlayedQuestions)
-            if (newPlayedQuestions.every(row => row.every(el => el === 1))){
-                updateRound()
-            }
+            // setSelectedTopicIndex(-1)
+            // setSelectedQuestionIndex(-1)
+            // setWrongAnswerIndexes([])
+            // const newPlayedQuestions = playedQuestions.map((row) => row.slice()) //full copy
+            // newPlayedQuestions[selectedTopicIndex][selectedQuestionIndex] = 1
+            // setPlayedQuestions(newPlayedQuestions)
+            // if (newPlayedQuestions.every(row => row.every(el => el === 1))){
+            //     updateRound()
+            // }
+            setIsQuestionAnswered(true)
         } else {
             const newWrongAnswerIndexes = Object.assign([], wrongAnswerIndexes)
             newWrongAnswerIndexes.push(playerIndex)
@@ -62,8 +63,8 @@ export default function GameBoard(props) {
             topicIndex={index}
             topic={td}
             handleQuestionSelect={handleQuestionSelect}
-            rowPlayedQuestions={playedQuestions[index]} 
-            values={VALUES}/>)
+            rowPlayedQuestions={playedQuestions[index]}
+            values={VALUES} />)
 
     return (
         <div className='Gameboard' >
@@ -74,15 +75,18 @@ export default function GameBoard(props) {
                         topic={topics[selectedTopicIndex]}
                         question={questions[selectedTopicIndex][selectedQuestionIndex]}
                         answer={answers[selectedTopicIndex][selectedQuestionIndex]}
-                        isLimitedTime = {isLimitedTime}
-                        limitedTime = {limitedTime} />}
+                        isLimitedTime={isLimitedTime}
+                        limitedTime={limitedTime}
+                        isQuestionAnswered={isQuestionAnswered}
+                    />}
             </div>
 
             <Score
                 players={players}
                 selectedQuestionIndex={selectedQuestionIndex}
                 wrongAnswerIndexes={wrongAnswerIndexes}
-                handlePlayerAnswer={handlePlayerAnswer} />
+                handlePlayerAnswer={handlePlayerAnswer}
+                isQuestionAnswered={isQuestionAnswered} />
 
         </div>
     )
