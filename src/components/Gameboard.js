@@ -25,35 +25,34 @@ export default function GameBoard(props) {
 
     const [selectedTopicIndex, setSelectedTopicIndex] = useState(-1)
     const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(-1)
-    const [wrongAnswerIndexes, setWrongAnswerIndexes] = useState([])
-    const [isQuestionAnswered, setIsQuestionAnswered] = useState(false)
+
+    //ответы игроков на текущий вопрос. 0 - не давал ответа, -1 - неправильный ответ, 1 - правильный ответ
+    const [playersAnswers, setPlayersAnswers] = useState(new Array(players.length).fill(0))
 
     const handleQuestionSelect = (topicIndex, questionIndex) => {
         setSelectedTopicIndex(topicIndex)
         setSelectedQuestionIndex(questionIndex)
+
+        if (topicIndex === -1 && questionIndex === -1) { //вернулись на главный экран
+            setPlayersAnswers(new Array(players.length).fill(0))
+
+            const newPlayedQuestions = playedQuestions.map((row) => row.slice()) //full copy
+            newPlayedQuestions[selectedTopicIndex][selectedQuestionIndex] = 1
+            setPlayedQuestions(newPlayedQuestions)
+            if (newPlayedQuestions.every(row => row.every(el => el === 1))) {
+                updateRound()
+            }
+        }
     }
 
     const handlePlayerAnswer = (playerIndex, isCorrect) => {
-        if (wrongAnswerIndexes.includes(playerIndex) || isQuestionAnswered) return
+        if (playersAnswers[playerIndex] !== 0 || playersAnswers.some(a => a === 1)) return
         const addScore = VALUES[selectedQuestionIndex]
         updateScore(playerIndex, addScore, isCorrect)
 
-        if (isCorrect) {
-            // setSelectedTopicIndex(-1)
-            // setSelectedQuestionIndex(-1)
-            // setWrongAnswerIndexes([])
-            // const newPlayedQuestions = playedQuestions.map((row) => row.slice()) //full copy
-            // newPlayedQuestions[selectedTopicIndex][selectedQuestionIndex] = 1
-            // setPlayedQuestions(newPlayedQuestions)
-            // if (newPlayedQuestions.every(row => row.every(el => el === 1))){
-            //     updateRound()
-            // }
-            setIsQuestionAnswered(true)
-        } else {
-            const newWrongAnswerIndexes = Object.assign([], wrongAnswerIndexes)
-            newWrongAnswerIndexes.push(playerIndex)
-            setWrongAnswerIndexes(newWrongAnswerIndexes)
-        }
+        const newPlayersAnswers = Object.assign([], playersAnswers)
+        newPlayersAnswers[playerIndex] = isCorrect ? 1 : -1
+        setPlayersAnswers(newPlayersAnswers)
     }
 
 
@@ -77,16 +76,17 @@ export default function GameBoard(props) {
                         answer={answers[selectedTopicIndex][selectedQuestionIndex]}
                         isLimitedTime={isLimitedTime}
                         limitedTime={limitedTime}
-                        isQuestionAnswered={isQuestionAnswered}
+                        playersAnswers={playersAnswers}
+                        goToGameBoard={() => handleQuestionSelect(-1, -1)}
                     />}
             </div>
 
             <Score
                 players={players}
                 selectedQuestionIndex={selectedQuestionIndex}
-                wrongAnswerIndexes={wrongAnswerIndexes}
+                playersAnswers={playersAnswers}
                 handlePlayerAnswer={handlePlayerAnswer}
-                isQuestionAnswered={isQuestionAnswered} />
+                />
 
         </div>
     )
