@@ -3,6 +3,7 @@ import Question from './Question';
 import TopicRow from './TopicRow';
 import Score from './Score';
 import Topic from './Topic';
+import FinalScore from './FinalScore';
 
 
 export default function GameBoard(props) {
@@ -29,6 +30,8 @@ export default function GameBoard(props) {
     const [selectedTopicIndex, setSelectedTopicIndex] = useState(-1)
     const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(-1)
 
+    const [showFinalScore, setShowFinalScore] = useState(false)
+
     //ответы игроков на текущий вопрос. 0 - не давал ответа, -1 - неправильный ответ, 1 - правильный ответ
     const [playersAnswers, setPlayersAnswers] = useState(new Array(players.length).fill(0))
 
@@ -53,7 +56,7 @@ export default function GameBoard(props) {
             newPlayedQuestions[selectedTopicIndex][selectedQuestionIndex] = 1
             setPlayedQuestions(newPlayedQuestions)
             if (newPlayedQuestions.every(row => row.every(el => el === 1))) {
-                updateRound()
+                setShowFinalScore(true)
             }
         }
     }
@@ -81,28 +84,32 @@ export default function GameBoard(props) {
     return (
         showingTopicIndex >= 0 ?
             <Topic topic={topics[showingTopicIndex]} /> :
-            <div className='Gameboard' >
-                <div className='content'>
-                    {selectedQuestionIndex === -1 && topicsRows}
-                    {selectedQuestionIndex !== -1 &&
-                        <Question
-                            topic={topics[selectedTopicIndex]}
-                            question={questions[selectedTopicIndex][selectedQuestionIndex]}
-                            answer={answers[selectedTopicIndex][selectedQuestionIndex]}
-                            isLimitedTime={isLimitedTime}
-                            limitedTime={limitedTime}
-                            playersAnswers={playersAnswers}
-                            goToGameBoard={() => handleQuestionSelect(-1, -1)}
-                        />}
+
+            showFinalScore ?
+                <FinalScore players={players} updateRound={updateRound} /> :
+
+                <div className='Gameboard' >
+                    <div className='content'>
+                        {selectedQuestionIndex === -1 && topicsRows}
+                        {selectedQuestionIndex !== -1 &&
+                            <Question
+                                topic={topics[selectedTopicIndex]}
+                                question={questions[selectedTopicIndex][selectedQuestionIndex]}
+                                answer={answers[selectedTopicIndex][selectedQuestionIndex]}
+                                isLimitedTime={isLimitedTime}
+                                limitedTime={limitedTime}
+                                playersAnswers={playersAnswers}
+                                goToGameBoard={() => handleQuestionSelect(-1, -1)}
+                            />}
+                    </div>
+
+                    <Score
+                        players={players}
+                        selectedQuestionIndex={selectedQuestionIndex}
+                        playersAnswers={playersAnswers}
+                        handlePlayerAnswer={handlePlayerAnswer}
+                    />
+
                 </div>
-
-                <Score
-                    players={players}
-                    selectedQuestionIndex={selectedQuestionIndex}
-                    playersAnswers={playersAnswers}
-                    handlePlayerAnswer={handlePlayerAnswer}
-                />
-
-            </div>
     )
 }

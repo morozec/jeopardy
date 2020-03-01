@@ -187,3 +187,10 @@ html, body, #root{
 .question-answer{
   cursor: pointer;
 }
+
+.player-info-container-fs{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
