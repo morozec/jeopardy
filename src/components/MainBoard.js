@@ -21,10 +21,19 @@ function MainBoard(props) {
     const [round, setRound] = useState(0)
     const [showRound, setShowRound] = useState(false)
 
+
     const ROUNDS_COUNT = 3
     const TOPICS_COUNT = 18
     const SHOW_ROUND_TIME = 1000
-    const SHOW_ALL_TOPICS_TIME = 1000
+
+    const hideAllTopics = () => {
+        setShowAllTopics(false)
+        setRound(1)
+        setShowRound(true)
+        setTimeout(() => {
+            setShowRound(false)
+        }, 1000)
+    }
 
 
     useEffect(() => {
@@ -49,30 +58,30 @@ function MainBoard(props) {
                 setAnswers(answers)
 
                 setShowAllTopics(true)
-                setTimeout(() => {
-                    setShowAllTopics(false)
+                // setTimeout(() => {
+                //     setShowAllTopics(false)
 
-                    setRound(1)
-                    setShowRound(true)
+                //     setRound(1)
+                //     setShowRound(true)
 
-                    setTimeout(() => {
-                        setShowRound(false)
-                    }, SHOW_ROUND_TIME)
-                }, SHOW_ALL_TOPICS_TIME)
+                //     setTimeout(() => {
+                //         setShowRound(false)
+                //     }, SHOW_ROUND_TIME)
+                // }, SHOW_ALL_TOPICS_TIME)
             })
             .finally(() => setIsLoading(false))
 
     }, [packageId])
 
     const updateRound = () => {
-        if (round < ROUNDS_COUNT){
+        if (round < ROUNDS_COUNT) {
             setRound(round + 1)
             setShowRound(true)
 
             setTimeout(() => {
                 setShowRound(false)
             }, SHOW_ROUND_TIME)
-        }else{
+        } else {
             alert('Игра окончена')
         }
     }
@@ -101,10 +110,11 @@ function MainBoard(props) {
         isLoading ?
             <div>Loading...</div> :
             showAllTopics ?
-                <TopicsTable topics={topics} /> :
+                <TopicsTable topics={topics} hideAllTopics={hideAllTopics} /> :
 
                 showRound ?
                     <Round round={round} /> :
+
                     <GameBoard
                         players={players}
                         topics={topics}
@@ -112,9 +122,9 @@ function MainBoard(props) {
                         answers={answers}
                         updateScore={updateScore}
                         round={round}
-                        updateRound = {updateRound}
-                        isLimitedTime = {isLimitedTime}
-                        limitedTime = {limitedTime}
+                        updateRound={updateRound}
+                        isLimitedTime={isLimitedTime}
+                        limitedTime={limitedTime}
                     />
 
     )
