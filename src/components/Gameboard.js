@@ -63,7 +63,7 @@ export default function GameBoard(props) {
 
     const handlePlayerAnswer = (playerIndex, isCorrect) => {
         if (playersAnswers[playerIndex] !== 0 || playersAnswers.some(a => a === 1)) return
-        const addScore = VALUES[selectedQuestionIndex]
+        const addScore = VALUES[selectedQuestionIndex] * round
         updateScore(playerIndex, addScore, isCorrect)
 
         const newPlayersAnswers = Object.assign([], playersAnswers)
@@ -79,7 +79,8 @@ export default function GameBoard(props) {
             topic={td}
             handleQuestionSelect={handleQuestionSelect}
             rowPlayedQuestions={playedQuestions[index]}
-            values={VALUES} />)
+            values={VALUES}
+            round={round} />)
 
     return (
         showingTopicIndex >= 0 ?

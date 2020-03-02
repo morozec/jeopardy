@@ -1,12 +1,12 @@
 import React from 'react'
 
 function TopicRow(props) {
-    const { topicIndex, topic, handleQuestionSelect, rowPlayedQuestions, values } = props;
+    const { topicIndex, topic, handleQuestionSelect, rowPlayedQuestions, values, round } = props;
 
     const valuesCells = values.map((v, questionIndex) =>
         rowPlayedQuestions[questionIndex] !== 1 ?
             <div key={questionIndex} className="cell-value" onClick={() => handleQuestionSelect(topicIndex, questionIndex)}>
-                {v}
+                {v * round}
             </div> :
             <div key={questionIndex} className="cell-empty"></div>)
 
