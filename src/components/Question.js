@@ -8,15 +8,19 @@ export default function Question(props) {
     const [isPause, setIsPause] = useState(false)
 
 
+    const needShowAnswer = showAnswer || playersAnswers.some(a => a === 1)
+
     useEffect(() => {
+        if (needShowAnswer) return
         if (timeLeft <= 0) {
             setShowAnswer(true)
             return
         }
+
         if (isPause) return
         const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
         return () => clearInterval(timerId)
-    }, [timeLeft, isPause])
+    }, [timeLeft, isPause, needShowAnswer])
 
     const handlePauseClick = () => {
         setIsPause(!isPause)
@@ -27,8 +31,7 @@ export default function Question(props) {
         setShowAnswer(true)
     }
 
-    const needShowAnswer = showAnswer || playersAnswers.some(a => a === 1)
-
+   
     return (
         <div className="Question">
             <div>{topic}</div>
@@ -39,7 +42,7 @@ export default function Question(props) {
             {/* {showAnswer || playersAnswers.some(a => a === 1) ? <div>{answer}</div> : <Button onClick={() => setShowAnswer(true)}>Показать ответ</Button>} */}
             <Button disabled={!needShowAnswer} onClick={() => goToGameBoard()}>Главный экран</Button>
 
-            {isLimitedTime &&
+            {isLimitedTime && !needShowAnswer &&
                 <div>
                     <label>{`Осталось секунд: ${timeLeft}`}</label>
                     <Button disabled={timeLeft === 0} onClick={handlePauseClick}>{isPause ? 'Продолжить' : 'Пауза'}</Button>
