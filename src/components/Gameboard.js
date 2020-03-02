@@ -86,7 +86,7 @@ export default function GameBoard(props) {
             <Topic topic={topics[showingTopicIndex]} /> :
 
             showFinalScore ?
-                <FinalScore players={players} updateRound={updateRound} /> :
+                <FinalScore players={players} updateRound={updateRound} round={round} /> :
 
                 <div className='Gameboard' >
                     <div className='content'>

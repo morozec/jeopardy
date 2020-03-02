@@ -81,9 +81,7 @@ function MainBoard(props) {
             setTimeout(() => {
                 setShowRound(false)
             }, SHOW_ROUND_TIME)
-        } else {
-            alert('Игра окончена')
-        }
+        } 
     }
 
     if (!playersNames) {
