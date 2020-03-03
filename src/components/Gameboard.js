@@ -7,12 +7,12 @@ import FinalScore from './FinalScore';
 
 
 export default function GameBoard(props) {
-    const TOPICS_TIMER = 1000
+    const TOPICS_TIMER = 100
     const ROUND_TOPICS_COUNT = 6
     const QUESTIONS_COUNT = 5
     const VALUES = [100, 200, 300, 400, 500]
 
-    const { players, updateScore, round, updateRound, isLimitedTime, limitedTime } = props
+    const { players, updateScore, round, updateRound, isLimitedTime, limitedTime, changeScore } = props
 
     const start = ROUND_TOPICS_COUNT * (round - 1)
     const end = ROUND_TOPICS_COUNT * (round)
@@ -72,6 +72,7 @@ export default function GameBoard(props) {
     }
 
 
+
     const topicsRows = topics.map((td, index) =>
         <TopicRow
             key={index}
@@ -109,6 +110,7 @@ export default function GameBoard(props) {
                         selectedQuestionIndex={selectedQuestionIndex}
                         playersAnswers={playersAnswers}
                         handlePlayerAnswer={handlePlayerAnswer}
+                        changeScore={changeScore}
                     />
 
                 </div>

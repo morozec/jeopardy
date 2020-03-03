@@ -103,6 +103,12 @@ function MainBoard(props) {
         setPlayers(newPlayers)
     }
 
+    const changeScore = (playerIndex, newScore) => {
+        const newPlayers = Object.assign([], players)
+        newPlayers[playerIndex].score = newScore
+        setPlayers(newPlayers)
+    }
+
     return (
 
         isLoading ?
@@ -123,6 +129,7 @@ function MainBoard(props) {
                         updateRound={updateRound}
                         isLimitedTime={isLimitedTime}
                         limitedTime={limitedTime}
+                        changeScore={changeScore}
                     />
 
     )
