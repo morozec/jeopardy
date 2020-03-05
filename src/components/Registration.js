@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import plus from './../img/plus.png'
 import minus from './../img/minus.png'
 import { Modal, Button } from 'react-bootstrap';
+import Loading from './Loading';
 
 export default function Registration() {
     const [players, setPlayers] = useState(['Игрок 1'])
@@ -113,7 +114,7 @@ export default function Registration() {
                 <Modal.Header closeButton>
                     <Modal.Title>Список игр</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className='packages-list'>{isLoading ? 'Loading...' : packagesList}</Modal.Body>
+                <Modal.Body className='packages-list'>{isLoading ? <Loading /> : packagesList}</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleHideGames}>
                         Отмена

@@ -3,6 +3,7 @@ import Player from '../data/Players';
 import TopicsTable from './TopicsTable';
 import Round from './Round';
 import GameBoard from './GameBoard'
+import Loading from './Loading';
 
 function MainBoard(props) {
 
@@ -112,7 +113,7 @@ function MainBoard(props) {
     return (
 
         isLoading ?
-            <div>Loading...</div> :
+            <Loading /> :
             showAllTopics ?
                 <TopicsTable topics={topics} hideAllTopics={hideAllTopics} /> :
 
