@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default function TopicsTable(props){
-    console.log(props)
     const { topics, hideAllTopics } = props
   
     return(

@@ -12,7 +12,7 @@ function TopicRow(props) {
 
     return (
         <div className='TopicRow'>
-            <div className="Topic">{topic}</div>
+            <div className="Topic">{topic.name}</div>
             {valuesCells}
         </div>
     )

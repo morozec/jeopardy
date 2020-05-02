@@ -3,27 +3,31 @@ import Player from '../data/Players';
 import TopicsTable from './TopicsTable';
 import Round from './Round';
 import GameBoard from './GameBoard'
+import { parseDb } from './../services/parsers';
 
 function MainBoard(props) {
 
     const { playersNames, packageId, isLimitedTime, limitedTime } = props.location
-    // console.log(packageId)
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map((pn, i) => new Player(pn, 0, i === 0)) : [])
 
     const [isLoading, setIsLoading] = useState(false)
-    const [topics, setTopics] = useState([])
-    const [questions, setQuestions] = useState([])
-    const [answers, setAnswers] = useState([])
+    // const [topics, setTopics] = useState([])
+    // const [questions, setQuestions] = useState([])
+    // const [answers, setAnswers] = useState([])
+    const [questionsPackage, setQuestionsPackage] = useState(null)
 
     const [showAllTopics, setShowAllTopics] = useState(false)
 
     const [round, setRound] = useState(0)
     const [showRound, setShowRound] = useState(false)
 
+    let topics = questionsPackage
+        ? questionsPackage.rounds.map(r => r.topics).reduce((res, cur) => [...res, ...cur], []).map(topic => topic.name)
+        : [];
+
 
     const ROUNDS_COUNT = 3
-    const TOPICS_COUNT = 18
     const SHOW_ROUND_TIME = 1000
 
     const hideAllTopics = () => {
@@ -45,19 +49,20 @@ function MainBoard(props) {
         fetch(`${corsProxy}${packageApi}${packageId}`)
             .then(response => response.json())
             .then(pack => {
-                const data = pack.tours[0].questions.slice(0, TOPICS_COUNT)
-                const topics = data.map(d => d.question.split('\n ')[0])
-                // console.log(topics)
-                const questions = data.map(d => d.question.split('\n ').slice(1))
-                // console.log(questions)
-                const answers = data.map(d => d.answer.split('\n '))
-                // console.log(answers)
+                // const data = pack.tours[0].questions.slice(0, TOPICS_COUNT)
+                // const topics = data.map(d => d.question.split('\n ')[0])
+                // const questions = data.map(d => d.question.split('\n ').slice(1))
+                // const answers = data.map(d => d.answer.split('\n '))
 
-                setTopics(topics)
-                setQuestions(questions)
-                setAnswers(answers)
+                // setTopics(topics)
+                // setQuestions(questions)
+                // setAnswers(answers)
 
+
+                const qp = parseDb(pack);
+                setQuestionsPackage(qp);
                 setShowAllTopics(true)
+
                 // setTimeout(() => {
                 //     setShowAllTopics(false)
 
@@ -107,21 +112,19 @@ function MainBoard(props) {
 
     return (
 
-        isLoading ?
-            <div>Loading...</div> :
-            showAllTopics ?
-                <TopicsTable topics={topics} hideAllTopics={hideAllTopics} /> :
+        isLoading || !questionsPackage
+            ? <div>Loading...</div>
+            : showAllTopics
 
-                showRound ?
-                    <Round round={round} /> :
+                ? <TopicsTable topics={topics} hideAllTopics={hideAllTopics} />
+                : showRound
 
-                    <GameBoard
+                    ? <Round round={round} />
+                    : <GameBoard
                         players={players}
-                        topics={topics}
-                        questions={questions}
-                        answers={answers}
+                        questionsPackage={questionsPackage}
                         updateScore={updateScore}
-                        round={round}
+                        roundData={questionsPackage.rounds[round]}
                         updateRound={updateRound}
                         isLimitedTime={isLimitedTime}
                         limitedTime={limitedTime}

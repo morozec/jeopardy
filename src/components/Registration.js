@@ -6,10 +6,11 @@ import { Modal, Button } from 'react-bootstrap';
 
 export default function Registration() {
     const [players, setPlayers] = useState(['Игрок 1'])
-    const [isDbSource, setIsDbSource] = useState(true)
+    const [isDbSource, setIsDbSource] = useState(false)
     const [isLimitedTime, setIsLimitedTime] = useState(false)
     const [limitedTime, setLimitedTime] = useState(20)
     const [showGames, setShowGames] = useState(false)
+    const [showSelfGame, setShowSelfGame] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [packages, setPackages] = useState([])
 
@@ -85,7 +86,10 @@ export default function Registration() {
         </div>
     )
 
-    const handleHideGames = () => setShowGames(false)
+    const handleHideGames = () => {
+        setShowGames(false);
+        setShowSelfGame(false);
+    }
 
 
     return (
@@ -93,7 +97,7 @@ export default function Registration() {
             {playersInputs}
             <img src={plus} alt='add player' className='plus-img' onClick={handlePlus} />
             <label>Использовать базу
-                <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} disabled={true} />
+                <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} />
             </label>
 
             <label>Ограниченное время на ответ
@@ -101,19 +105,37 @@ export default function Registration() {
             </label>
 
             {isLimitedTime &&
-                <label>Секунд на ответ 
+                <label>Секунд на ответ
                     <input type='text' value={limitedTime} onChange={handleLimitiedTimeChanged} />
                 </label>
             }
 
-            <Button onClick={handleShowGames}>Начать игру</Button>
+            <Button onClick={() => isDbSource ? handleShowGames() : setShowSelfGame(true)}>Начать игру</Button>
 
 
-            <Modal show={showGames} onHide={handleHideGames} >
+            <Modal show={showGames} onHide={handleHideGames} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Список игр</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='packages-list'>{isLoading ? 'Loading...' : packagesList}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleHideGames}>
+                        Отмена
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showSelfGame} onHide={handleHideGames} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Загрузка вопросов для игры</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="custom-file mb-2">
+                        <input type="file" className="custom-file-input" id="packageFile" accept='.json'/>
+                        <label className="custom-file-label" htmlFor="packageFile">Загрузить файл с вопросами</label>
+                    </div>
+                    <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>
+                </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleHideGames}>
                         Отмена
