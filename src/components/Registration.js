@@ -2,17 +2,17 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import plus from './../img/plus.png'
 import minus from './../img/minus.png'
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Container } from 'react-bootstrap';
 
-export default function Registration() {
+export default function Registration(props) {
     const [players, setPlayers] = useState(['Игрок 1'])
     const [isDbSource, setIsDbSource] = useState(false)
     const [isLimitedTime, setIsLimitedTime] = useState(false)
     const [limitedTime, setLimitedTime] = useState(20)
     const [showGames, setShowGames] = useState(false)
-    const [showSelfGame, setShowSelfGame] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [packages, setPackages] = useState([])
+    const [userFile, setUserFile] = useState(null)
 
     const handleChange = (newValue, index) => {
         const newPlayers = Object.assign([], players)
@@ -57,6 +57,10 @@ export default function Registration() {
 
     )
 
+    const handleUserLoadFile = (ev) => {
+        setUserFile(ev.target.files[0])
+    }
+
     const handleShowGames = () => {
         setIsLoading(true)
         setShowGames(true)
@@ -88,7 +92,6 @@ export default function Registration() {
 
     const handleHideGames = () => {
         setShowGames(false);
-        setShowSelfGame(false);
     }
 
 
@@ -100,6 +103,15 @@ export default function Registration() {
                 <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} />
             </label>
 
+            {!isDbSource &&
+                <Container>
+                    <div className="custom-file mb-2">
+                        <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required/>
+                        <label className="custom-file-label" htmlFor="packageFile">{userFile ? userFile.name : 'Выбрать файл с вопросами'}</label>
+                    </div>
+                    <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>
+                </Container>}
+
             <label>Ограниченное время на ответ
                 <input type='checkbox' checked={isLimitedTime} onChange={handleIsLimitedTimeChanged} />
             </label>
@@ -110,7 +122,19 @@ export default function Registration() {
                 </label>
             }
 
-            <Button onClick={() => isDbSource ? handleShowGames() : setShowSelfGame(true)}>Начать игру</Button>
+            {/* <Button onClick={() => isDbSource ? handleShowGames() : setShowSelfGame(true)}>Начать игру</Button> */}
+
+            <Link
+                to={{
+                    pathname: '/',
+                    playersNames: players,
+                    isLimitedTime: isLimitedTime,
+                    limitedTime: limitedTime,
+                    userFile: userFile
+
+                }}>
+                <Button variant='primary' disabled={!userFile}>Начать игру</Button>
+            </Link>
 
 
             <Modal show={showGames} onHide={handleHideGames} centered>
@@ -124,24 +148,7 @@ export default function Registration() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            <Modal show={showSelfGame} onHide={handleHideGames} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Загрузка вопросов для игры</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="custom-file mb-2">
-                        <input type="file" className="custom-file-input" id="packageFile" accept='.json'/>
-                        <label className="custom-file-label" htmlFor="packageFile">Загрузить файл с вопросами</label>
-                    </div>
-                    <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleHideGames}>
-                        Отмена
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            
         </div>
     )
 }
