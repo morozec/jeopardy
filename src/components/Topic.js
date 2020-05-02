@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Topic(props) {
     return (
-        <div className='centered'>{props.topic}</div>
+        <div className='centered'>{props.topicName}</div>
     )
 }

@@ -4,32 +4,32 @@ import TopicsTable from './TopicsTable';
 import Round from './Round';
 import GameBoard from './GameBoard'
 import Loading from './Loading';
+import { parseDb } from './../services/parsers';
 
 function MainBoard(props) {
 
-    const { playersNames, packageId, isLimitedTime, limitedTime } = props.location
-    // console.log(packageId)
+    const { playersNames, selectedPackage, isLimitedTime, limitedTime, userFile } = props.location
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map((pn, i) => new Player(pn, 0, i === 0)) : [])
 
     const [isLoading, setIsLoading] = useState(false)
-    const [topics, setTopics] = useState([])
-    const [questions, setQuestions] = useState([])
-    const [answers, setAnswers] = useState([])
+    const [questionsPackage, setQuestionsPackage] = useState(null)
 
     const [showAllTopics, setShowAllTopics] = useState(false)
 
-    const [round, setRound] = useState(0)
+    const [round, setRound] = useState(1)
     const [showRound, setShowRound] = useState(false)
+
+    let topics = questionsPackage
+        ? questionsPackage.rounds.map(r => r.topics).reduce((res, cur) => [...res, ...cur], []).map(topic => topic.name)
+        : [];
 
 
     const ROUNDS_COUNT = 3
-    const TOPICS_COUNT = 18
     const SHOW_ROUND_TIME = 1000
 
     const hideAllTopics = () => {
         setShowAllTopics(false)
-        setRound(1)
         setShowRound(true)
         setTimeout(() => {
             setShowRound(false)
@@ -38,27 +38,32 @@ function MainBoard(props) {
 
 
     useEffect(() => {
-        if (!packageId) return
+        if (userFile) {//загрузка из своего файла
+
+            var reader = new FileReader();
+            reader.readAsText(userFile);
+
+            reader.onload = (ev) => {
+                setQuestionsPackage(JSON.parse(ev.target.result));
+                setShowAllTopics(true);
+            }
+           
+            return;
+        }
+
+        if (!selectedPackage) return;
 
         setIsLoading(true)
         const corsProxy = 'https://cors-anywhere.herokuapp.com/';
         const packageApi = 'http://api.baza-voprosov.ru/packages/';
-        fetch(`${corsProxy}${packageApi}${packageId}`)
+        fetch(`${corsProxy}${packageApi}${selectedPackage.id}`)
             .then(response => response.json())
             .then(pack => {
-                const data = pack.tours[0].questions.slice(0, TOPICS_COUNT)
-                const topics = data.map(d => d.question.split('\n ')[0])
-                // console.log(topics)
-                const questions = data.map(d => d.question.split('\n ').slice(1))
-                // console.log(questions)
-                const answers = data.map(d => d.answer.split('\n '))
-                // console.log(answers)
 
-                setTopics(topics)
-                setQuestions(questions)
-                setAnswers(answers)
-
+                const qp = parseDb(pack);
+                setQuestionsPackage(qp);
                 setShowAllTopics(true)
+
                 // setTimeout(() => {
                 //     setShowAllTopics(false)
 
@@ -72,7 +77,7 @@ function MainBoard(props) {
             })
             .finally(() => setIsLoading(false))
 
-    }, [packageId])
+    }, [userFile, selectedPackage])
 
     const updateRound = () => {
         if (round < ROUNDS_COUNT) {
@@ -112,21 +117,20 @@ function MainBoard(props) {
 
     return (
 
-        isLoading ?
-            <Loading /> :
-            showAllTopics ?
-                <TopicsTable topics={topics} hideAllTopics={hideAllTopics} /> :
+        isLoading || !questionsPackage
+            ? <Loading /> 
+            : showAllTopics
 
-                showRound ?
-                    <Round round={round} /> :
+                ? <TopicsTable topics={topics} hideAllTopics={hideAllTopics} />
+                : showRound
 
-                    <GameBoard
+                    ? <Round round={round} />
+                    : <GameBoard
                         players={players}
-                        topics={topics}
-                        questions={questions}
-                        answers={answers}
+                        questionsPackage={questionsPackage}
                         updateScore={updateScore}
                         round={round}
+                        roundData={questionsPackage.rounds[round-1]}
                         updateRound={updateRound}
                         isLimitedTime={isLimitedTime}
                         limitedTime={limitedTime}

@@ -2,17 +2,19 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import plus from './../img/plus.png'
 import minus from './../img/minus.png'
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Container } from 'react-bootstrap';
 import Loading from './Loading';
 
-export default function Registration() {
+export default function Registration(props) {
     const [players, setPlayers] = useState(['Игрок 1'])
-    const [isDbSource, setIsDbSource] = useState(true)
+    const [isDbSource, setIsDbSource] = useState(false)
     const [isLimitedTime, setIsLimitedTime] = useState(false)
     const [limitedTime, setLimitedTime] = useState(20)
     const [showGames, setShowGames] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [packages, setPackages] = useState([])
+    const [userFile, setUserFile] = useState(null)
+    const [selectedPackage, setSelectedPackage] = useState(null)
 
     const handleChange = (newValue, index) => {
         const newPlayers = Object.assign([], players)
@@ -57,6 +59,10 @@ export default function Registration() {
 
     )
 
+    const handleUserLoadFile = (ev) => {
+        setUserFile(ev.target.files[0])
+    }
+
     const handleShowGames = () => {
         setIsLoading(true)
         setShowGames(true)
@@ -72,21 +78,14 @@ export default function Registration() {
     }
 
     const packagesList = packages.map((p) =>
-        <div key={p.id}>
-            <Link
-                to={{
-                    pathname: '/',
-                    playersNames: players,
-                    packageId: p.id,
-                    isLimitedTime: isLimitedTime,
-                    limitedTime: limitedTime
-                }}>
-                {p.title}
-            </Link>
-        </div>
+        <Button variant='secondary' key = {p.id} onClick={() => {setSelectedPackage(p); setShowGames(false);}} block>
+            {p.title}
+        </Button>
     )
 
-    const handleHideGames = () => setShowGames(false)
+    const handleHideGames = () => {
+        setShowGames(false);
+    }
 
 
     return (
@@ -94,23 +93,60 @@ export default function Registration() {
             {playersInputs}
             <img src={plus} alt='add player' className='plus-img' onClick={handlePlus} />
             <label>Использовать базу
-                <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} disabled={true} />
+                <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} />
             </label>
+
+            {isDbSource &&
+                <Container>
+                    <div className="input-group mb-2">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={selectedPackage ? selectedPackage.title : ""} 
+                            placeholder='Игра не выбрана'
+                            disabled={true} />
+                        <div className="input-group-append">
+                            <button className="btn btn-secondary" type="button" onClick={handleShowGames}>
+                                Выбрать игру из базы
+                            </button>
+                        </div>
+                    </div>
+                </Container>
+            }
+
+            {!isDbSource &&
+                <Container>
+                    <div className="custom-file mb-2">
+                        <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
+                        <label className="custom-file-label" htmlFor="packageFile">{userFile ? userFile.name : 'Выбрать файл с вопросами'}</label>
+                    </div>
+                    <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>
+                </Container>}
 
             <label>Ограниченное время на ответ
                 <input type='checkbox' checked={isLimitedTime} onChange={handleIsLimitedTimeChanged} />
             </label>
 
             {isLimitedTime &&
-                <label>Секунд на ответ 
+                <label>Секунд на ответ
                     <input type='text' value={limitedTime} onChange={handleLimitiedTimeChanged} />
                 </label>
             }
 
-            <Button onClick={handleShowGames}>Начать игру</Button>
+            <Link
+                to={{
+                    pathname: '/',
+                    playersNames: players,
+                    isLimitedTime: isLimitedTime,
+                    limitedTime: limitedTime,
+                    userFile: userFile,
+                    selectedPackage: selectedPackage    
+                }}>
+                <Button variant='primary' disabled={!userFile && !selectedPackage}>Начать игру</Button>
+            </Link>
 
 
-            <Modal show={showGames} onHide={handleHideGames} >
+            <Modal show={showGames} onHide={handleHideGames} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Список игр</Modal.Title>
                 </Modal.Header>
@@ -121,6 +157,7 @@ export default function Registration() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
         </div>
     )
 }

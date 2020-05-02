@@ -12,13 +12,7 @@ export default function GameBoard(props) {
     const QUESTIONS_COUNT = 5
     const VALUES = [100, 200, 300, 400, 500]
 
-    const { players, updateScore, round, updateRound, isLimitedTime, limitedTime, changeScore } = props
-
-    const start = ROUND_TOPICS_COUNT * (round - 1)
-    const end = ROUND_TOPICS_COUNT * (round)
-    const topics = props.topics.slice(start, end)
-    const questions = props.questions.slice(start, end)
-    const answers = props.answers.slice(start, end)
+    const { players, updateScore, round, roundData, updateRound, isLimitedTime, limitedTime, changeScore } = props
 
     const [showingTopicIndex, setShowingTopicIndex] = useState(0)
 
@@ -36,14 +30,15 @@ export default function GameBoard(props) {
     const [playersAnswers, setPlayersAnswers] = useState(new Array(players.length).fill(0))
 
     useEffect(() => {
-        if (showingTopicIndex === topics.length || showingTopicIndex === -1) {
-            setShowingTopicIndex(-1)
-            return
-        }
-        const timerId = setTimeout(() => setShowingTopicIndex(showingTopicIndex + 1), TOPICS_TIMER)
-        return () => clearInterval(timerId)
+        if (showingTopicIndex === -1) return;
+        const timerId = setTimeout(() =>
+            setShowingTopicIndex(showingTopicIndex < roundData.topics.length - 1
+                ? showingTopicIndex + 1
+                : -1),
+            TOPICS_TIMER);
+        return () => clearTimeout(timerId)
 
-    }, [showingTopicIndex, topics.length])
+    }, [showingTopicIndex, roundData])
 
     const handleQuestionSelect = (topicIndex, questionIndex) => {
         setSelectedTopicIndex(topicIndex)
@@ -72,8 +67,7 @@ export default function GameBoard(props) {
     }
 
 
-
-    const topicsRows = topics.map((td, index) =>
+    const topicsRows = roundData.topics.map((td, index) =>
         <TopicRow
             key={index}
             topicIndex={index}
@@ -85,7 +79,7 @@ export default function GameBoard(props) {
 
     return (
         showingTopicIndex >= 0 ?
-            <Topic topic={topics[showingTopicIndex]} /> :
+            <Topic topicName={roundData.topics[showingTopicIndex].name} /> :
 
             showFinalScore ?
                 <FinalScore players={players} updateRound={updateRound} round={round} /> :
@@ -95,9 +89,9 @@ export default function GameBoard(props) {
                         {selectedQuestionIndex === -1 && topicsRows}
                         {selectedQuestionIndex !== -1 &&
                             <Question
-                                topic={topics[selectedTopicIndex]}
-                                question={questions[selectedTopicIndex][selectedQuestionIndex]}
-                                answer={answers[selectedTopicIndex][selectedQuestionIndex]}
+                                topicName={roundData.topics[selectedTopicIndex].name}
+                                question={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].question}
+                                answer={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].answer}
                                 isLimitedTime={isLimitedTime}
                                 limitedTime={limitedTime}
                                 playersAnswers={playersAnswers}
