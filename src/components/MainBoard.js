@@ -7,7 +7,7 @@ import { parseDb } from './../services/parsers';
 
 function MainBoard(props) {
 
-    const { playersNames, packageId, isLimitedTime, limitedTime, userFile } = props.location
+    const { playersNames, selectedPackage, isLimitedTime, limitedTime, userFile } = props.location
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map((pn, i) => new Player(pn, 0, i === 0)) : [])
 
@@ -50,12 +50,12 @@ function MainBoard(props) {
             return;
         }
 
-        if (!packageId) return;
+        if (!selectedPackage) return;
 
         setIsLoading(true)
         const corsProxy = 'https://cors-anywhere.herokuapp.com/';
         const packageApi = 'http://api.baza-voprosov.ru/packages/';
-        fetch(`${corsProxy}${packageApi}${packageId}`)
+        fetch(`${corsProxy}${packageApi}${selectedPackage.id}`)
             .then(response => response.json())
             .then(pack => {
 
@@ -76,7 +76,7 @@ function MainBoard(props) {
             })
             .finally(() => setIsLoading(false))
 
-    }, [userFile, packageId])
+    }, [userFile, selectedPackage])
 
     const updateRound = () => {
         if (round < ROUNDS_COUNT) {

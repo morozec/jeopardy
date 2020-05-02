@@ -13,6 +13,7 @@ export default function Registration(props) {
     const [isLoading, setIsLoading] = useState(false)
     const [packages, setPackages] = useState([])
     const [userFile, setUserFile] = useState(null)
+    const [selectedPackage, setSelectedPackage] = useState(null)
 
     const handleChange = (newValue, index) => {
         const newPlayers = Object.assign([], players)
@@ -76,18 +77,9 @@ export default function Registration(props) {
     }
 
     const packagesList = packages.map((p) =>
-        <div key={p.id}>
-            <Link
-                to={{
-                    pathname: '/',
-                    playersNames: players,
-                    packageId: p.id,
-                    isLimitedTime: isLimitedTime,
-                    limitedTime: limitedTime
-                }}>
-                {p.title}
-            </Link>
-        </div>
+        <Button variant='secondary' key = {p.id} onClick={() => {setSelectedPackage(p); setShowGames(false);}} block>
+            {p.title}
+        </Button>
     )
 
     const handleHideGames = () => {
@@ -103,10 +95,28 @@ export default function Registration(props) {
                 <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} />
             </label>
 
+            {isDbSource &&
+                <Container>
+                    <div className="input-group mb-2">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={selectedPackage ? selectedPackage.title : ""} 
+                            placeholder='Игра не выбрана'
+                            disabled={true} />
+                        <div className="input-group-append">
+                            <button className="btn btn-secondary" type="button" onClick={handleShowGames}>
+                                Выбрать игру из базы
+                            </button>
+                        </div>
+                    </div>
+                </Container>
+            }
+
             {!isDbSource &&
                 <Container>
                     <div className="custom-file mb-2">
-                        <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required/>
+                        <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
                         <label className="custom-file-label" htmlFor="packageFile">{userFile ? userFile.name : 'Выбрать файл с вопросами'}</label>
                     </div>
                     <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>
@@ -122,18 +132,16 @@ export default function Registration(props) {
                 </label>
             }
 
-            {/* <Button onClick={() => isDbSource ? handleShowGames() : setShowSelfGame(true)}>Начать игру</Button> */}
-
             <Link
                 to={{
                     pathname: '/',
                     playersNames: players,
                     isLimitedTime: isLimitedTime,
                     limitedTime: limitedTime,
-                    userFile: userFile
-
+                    userFile: userFile,
+                    selectedPackage: selectedPackage    
                 }}>
-                <Button variant='primary' disabled={!userFile}>Начать игру</Button>
+                <Button variant='primary' disabled={!userFile && !selectedPackage}>Начать игру</Button>
             </Link>
 
 
@@ -148,7 +156,7 @@ export default function Registration(props) {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            
+
         </div>
     )
 }
