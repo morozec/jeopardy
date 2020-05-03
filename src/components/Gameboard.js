@@ -105,6 +105,7 @@ export default function GameBoard(props) {
                         playersAnswers={playersAnswers}
                         handlePlayerAnswer={handlePlayerAnswer}
                         changeScore={changeScore}
+                        setShowFinalScore={setShowFinalScore}
                     />
 
                 </div>

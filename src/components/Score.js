@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap'
 
 export default function Score(props) {
 
-    const { players, selectedQuestionIndex, handlePlayerAnswer, playersAnswers, changeScore } = props
+    const { players, selectedQuestionIndex, handlePlayerAnswer, playersAnswers, changeScore, setShowFinalScore } = props
     const [isEditMode, setIsEditMode] = useState(new Array(players.length).fill(0))
     const [editingScore, setEditingScore] = useState(0)
 
@@ -61,6 +61,7 @@ export default function Score(props) {
     return (
         <div className='player-info-container'>
             {playersScores}
+            <Button variant='secondary' onClick={() => setShowFinalScore(true)}>Закончить раунд</Button>
         </div>
     )
 }
