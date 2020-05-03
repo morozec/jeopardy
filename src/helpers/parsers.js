@@ -1,7 +1,7 @@
-const TOPICS_COUNT = 18
+import {ROUNDS_COUNT, ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT} from './constants'
 
 export const parseDb = (pack) => {
-    const data = pack.tours[0].questions.slice(0, TOPICS_COUNT)
+    const data = pack.tours[0].questions.slice(0, ROUNDS_COUNT * ROUND_TOPICS_COUNT)
     const dataTopics = data.map(d => d.question.split('\n ')[0])
     const dataQuestions = data.map(d => d.question.split('\n ').slice(1))
     const dataAnswers = data.map(d => d.answer.split('\n '))
@@ -11,23 +11,23 @@ export const parseDb = (pack) => {
         finalRound: null
     };
 
-    for (let i = 0; i < 3; ++i) {
+    for (let i = 0; i < ROUNDS_COUNT; ++i) {
         let round = {
             name: `Раунд ${i + 1}`,
             topics: []
         };
 
-        for (let j = 0; j < 6; ++j) {
+        for (let j = 0; j < ROUND_TOPICS_COUNT; ++j) {
             let topic = {
-                name: dataTopics[i * 6 + j],
+                name: dataTopics[i * ROUND_TOPICS_COUNT + j],
                 questions: []
             };
 
-            for (let k = 0; k < 5; ++k) {
+            for (let k = 0; k < TOPIC_QUESTIONS_COUNT; ++k) {
                 let question = {
                     id: `${i+1}.${j+1}.${k+1}`,
-                    question: dataQuestions[i * 6 + j][k],
-                    answer: dataAnswers[i * 6 + j][k]
+                    question: dataQuestions[i * ROUND_TOPICS_COUNT + j][k],
+                    answer: dataAnswers[i * ROUND_TOPICS_COUNT + j][k]
                 }
                 topic.questions.push(question);
             }

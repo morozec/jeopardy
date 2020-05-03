@@ -4,7 +4,9 @@ import TopicsTable from './TopicsTable';
 import Round from './Round';
 import GameBoard from './GameBoard'
 import Loading from './Loading';
-import { parseDb } from './../services/parsers';
+import { parseDb } from '../helpers/parsers';
+import { ROUNDS_COUNT, SHOW_ROUND_TIME, corsProxy, packageApi } from './../helpers/constants'
+import FinalRoundTopics from './FinalRoundTopics';
 
 function MainBoard(props) {
 
@@ -24,16 +26,15 @@ function MainBoard(props) {
         ? questionsPackage.rounds.map(r => r.topics).reduce((res, cur) => [...res, ...cur], []).map(topic => topic.name)
         : [];
 
+    const isFinalRound = round === ROUNDS_COUNT + 1 || (questionsPackage && !questionsPackage.finalRound && round === ROUNDS_COUNT);
 
-    const ROUNDS_COUNT = 3
-    const SHOW_ROUND_TIME = 1000
 
     const hideAllTopics = () => {
         setShowAllTopics(false)
         setShowRound(true)
         setTimeout(() => {
             setShowRound(false)
-        }, 1000)
+        }, SHOW_ROUND_TIME)
     }
 
 
@@ -47,15 +48,14 @@ function MainBoard(props) {
                 setQuestionsPackage(JSON.parse(ev.target.result));
                 setShowAllTopics(true);
             }
-           
+
             return;
         }
 
         if (!selectedPackage) return;
 
         setIsLoading(true)
-        const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-        const packageApi = 'http://api.baza-voprosov.ru/packages/';
+
         fetch(`${corsProxy}${packageApi}${selectedPackage.id}`)
             .then(response => response.json())
             .then(pack => {
@@ -80,14 +80,14 @@ function MainBoard(props) {
     }, [userFile, selectedPackage])
 
     const updateRound = () => {
-        if (round < ROUNDS_COUNT) {
+        if (!isFinalRound) {
             setRound(round + 1)
             setShowRound(true)
 
             setTimeout(() => {
                 setShowRound(false)
             }, SHOW_ROUND_TIME)
-        } 
+        }
     }
 
     if (!playersNames) {
@@ -118,24 +118,27 @@ function MainBoard(props) {
     return (
 
         isLoading || !questionsPackage
-            ? <Loading /> 
+            ? <Loading />
             : showAllTopics
 
                 ? <TopicsTable topics={topics} hideAllTopics={hideAllTopics} />
                 : showRound
 
                     ? <Round round={round} />
-                    : <GameBoard
-                        players={players}
-                        questionsPackage={questionsPackage}
-                        updateScore={updateScore}
-                        round={round}
-                        roundData={questionsPackage.rounds[round-1]}
-                        updateRound={updateRound}
-                        isLimitedTime={isLimitedTime}
-                        limitedTime={limitedTime}
-                        changeScore={changeScore}
-                    />
+                    : round <= ROUNDS_COUNT
+                        ? <GameBoard
+                            players={players}
+                            questionsPackage={questionsPackage}
+                            updateScore={updateScore}
+                            round={round}
+                            roundData={questionsPackage.rounds[round - 1]}
+                            updateRound={updateRound}
+                            isLimitedTime={isLimitedTime}
+                            limitedTime={limitedTime}
+                            changeScore={changeScore}
+                            isFinalRound={isFinalRound}
+                        />
+                        : <FinalRoundTopics finalRoundData={questionsPackage.finalRound}/>
 
     )
 }

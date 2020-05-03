@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom'
 
 export default function FinalScore(props) {
 
-    const ROUNDS_COUNT = 3
-    const { players, updateRound, round } = props
+    const { players, updateRound, isFinalRound } = props
 
     const playersScores = players.map((p, i) => (
         <div key={i} className='player-info'>
@@ -18,7 +17,7 @@ export default function FinalScore(props) {
     return (
         <div className='player-info-container-fs' onClick={updateRound}>
             {playersScores}
-            {round === ROUNDS_COUNT &&
+            {isFinalRound &&
                 <Link to={{pathname: '/reg', }}>
                     <Button>Новая игра</Button>                    
                 </Link>}

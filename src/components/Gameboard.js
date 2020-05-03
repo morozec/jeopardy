@@ -4,21 +4,18 @@ import TopicRow from './TopicRow';
 import Score from './Score';
 import Topic from './Topic';
 import FinalScore from './FinalScore';
-
+import {ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIMER, VALUES} from './../helpers/constants'
 
 export default function GameBoard(props) {
-    const TOPICS_TIMER = 100
-    const ROUND_TOPICS_COUNT = 6
-    const QUESTIONS_COUNT = 5
-    const VALUES = [100, 200, 300, 400, 500]
+    
 
-    const { players, updateScore, round, roundData, updateRound, isLimitedTime, limitedTime, changeScore } = props
+    const { players, updateScore, round, roundData, updateRound, isLimitedTime, limitedTime, changeScore, isFinalRound } = props
 
     const [showingTopicIndex, setShowingTopicIndex] = useState(0)
 
     const [playedQuestions, setPlayedQuestions] = useState(
         new Array(ROUND_TOPICS_COUNT).fill(
-            new Array(QUESTIONS_COUNT).fill(0)))
+            new Array(TOPIC_QUESTIONS_COUNT).fill(0)))
     // const [curQuestion, setCurQuestion] = useState(undefined)
 
     const [selectedTopicIndex, setSelectedTopicIndex] = useState(-1)
@@ -35,7 +32,7 @@ export default function GameBoard(props) {
             setShowingTopicIndex(showingTopicIndex < roundData.topics.length - 1
                 ? showingTopicIndex + 1
                 : -1),
-            TOPICS_TIMER);
+            SHOW_TOPICS_TIMER);
         return () => clearTimeout(timerId)
 
     }, [showingTopicIndex, roundData])
@@ -82,7 +79,7 @@ export default function GameBoard(props) {
             <Topic topicName={roundData.topics[showingTopicIndex].name} /> :
 
             showFinalScore ?
-                <FinalScore players={players} updateRound={updateRound} round={round} /> :
+                <FinalScore players={players} updateRound={updateRound} isFinalRound={isFinalRound} /> :
 
                 <div className='Gameboard' >
                     <div className='content'>
