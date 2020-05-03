@@ -39,8 +39,7 @@ export default function Question(props) {
 
             <div className={needShowAnswer ? '' : 'question-answer'} onClick={handleAnswerClick}>{ needShowAnswer ? answer : '???'}</div>
 
-            {/* {showAnswer || playersAnswers.some(a => a === 1) ? <div>{answer}</div> : <Button onClick={() => setShowAnswer(true)}>Показать ответ</Button>} */}
-            <Button disabled={!needShowAnswer} onClick={() => goToGameBoard()}>Главный экран</Button>
+            {goToGameBoard && <Button disabled={!needShowAnswer} onClick={() => goToGameBoard()}>Главный экран</Button>}
 
             {isLimitedTime && !needShowAnswer &&
                 <div>

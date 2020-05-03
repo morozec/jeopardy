@@ -201,3 +201,14 @@ html, body, #root{
   justify-content: center;
   align-items: center;
 }
+
+.final-round-topics-container{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.final-round-topics{
+  margin: 1rem 0;
+}

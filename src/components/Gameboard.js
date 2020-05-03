@@ -4,7 +4,7 @@ import TopicRow from './TopicRow';
 import Score from './Score';
 import Topic from './Topic';
 import FinalScore from './FinalScore';
-import {ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIMER, VALUES} from './../helpers/constants'
+import {ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIME_MSECS, VALUES} from './../helpers/constants'
 
 export default function GameBoard(props) {
     
@@ -32,7 +32,7 @@ export default function GameBoard(props) {
             setShowingTopicIndex(showingTopicIndex < roundData.topics.length - 1
                 ? showingTopicIndex + 1
                 : -1),
-            SHOW_TOPICS_TIMER);
+            SHOW_TOPICS_TIME_MSECS);
         return () => clearTimeout(timerId)
 
     }, [showingTopicIndex, roundData])

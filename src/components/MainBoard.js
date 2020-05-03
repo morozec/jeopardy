@@ -5,8 +5,8 @@ import Round from './Round';
 import GameBoard from './GameBoard'
 import Loading from './Loading';
 import { parseDb } from '../helpers/parsers';
-import { ROUNDS_COUNT, SHOW_ROUND_TIME, corsProxy, packageApi } from './../helpers/constants'
-import FinalRoundTopics from './FinalRoundTopics';
+import { ROUNDS_COUNT, SHOW_ROUND_TIME_MSECS, corsProxy, packageApi } from './../helpers/constants'
+import FinalRound from './FinalRound';
 
 function MainBoard(props) {
 
@@ -34,7 +34,7 @@ function MainBoard(props) {
         setShowRound(true)
         setTimeout(() => {
             setShowRound(false)
-        }, SHOW_ROUND_TIME)
+        }, SHOW_ROUND_TIME_MSECS)
     }
 
 
@@ -86,7 +86,7 @@ function MainBoard(props) {
 
             setTimeout(() => {
                 setShowRound(false)
-            }, SHOW_ROUND_TIME)
+            }, SHOW_ROUND_TIME_MSECS)
         }
     }
 
@@ -138,7 +138,7 @@ function MainBoard(props) {
                             changeScore={changeScore}
                             isFinalRound={isFinalRound}
                         />
-                        : <FinalRoundTopics finalRoundData={questionsPackage.finalRound}/>
+                        : <FinalRound finalRoundData={questionsPackage.finalRound}/>
 
     )
 }
