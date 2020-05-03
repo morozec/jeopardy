@@ -37,9 +37,7 @@ export default function FinalRound(props) {
 
             <Score
                 players={players}
-                selectedQuestionIndex={-1}
-                // playersAnswers={playersAnswers}
-                // handlePlayerAnswer={handlePlayerAnswer}
+                canAnswer={false}
                 changeScore={changeScore}
                 setShowFinalScore={setShowFinalScore}
             />

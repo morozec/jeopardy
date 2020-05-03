@@ -4,6 +4,7 @@ import TopicRow from './TopicRow';
 import Score from './Score';
 import Topic from './Topic';
 import { ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIME_MSECS, VALUES } from './../helpers/constants'
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function GameBoard(props) {
 
@@ -23,6 +24,10 @@ export default function GameBoard(props) {
     //ответы игроков на текущий вопрос. 0 - не давал ответа, -1 - неправильный ответ, 1 - правильный ответ
     const [playersAnswers, setPlayersAnswers] = useState(new Array(players.length).fill(0))
 
+    const [showCat, setShowCat] = useState(false);
+    const [catPlayerIndex, setCatPlayerIndex] = useState(0);
+    const [catValue, setCatValue] = useState(VALUES[0] * round);
+
     useEffect(() => {
         if (showingTopicIndex === -1) return;
         const timerId = setTimeout(() =>
@@ -35,10 +40,18 @@ export default function GameBoard(props) {
     }, [showingTopicIndex, roundData])
 
     const handleQuestionSelect = (topicIndex, questionIndex) => {
+        let isQuestionSelected = topicIndex !== -1 && questionIndex !== -1;
         setSelectedTopicIndex(topicIndex)
         setSelectedQuestionIndex(questionIndex)
 
-        if (topicIndex === -1 && questionIndex === -1) { //вернулись на главный экран
+        if (isQuestionSelected) {
+            if (roundData.topics[topicIndex].questions[questionIndex].isCat) {
+                setShowCat(true);
+                return;
+            }
+        }
+
+        if (!isQuestionSelected) { //вернулись на главный экран
             setPlayersAnswers(new Array(players.length).fill(0))
 
             const newPlayedQuestions = playedQuestions.map((row) => row.slice()) //full copy
@@ -50,14 +63,30 @@ export default function GameBoard(props) {
         }
     }
 
-    const handlePlayerAnswer = (playerIndex, isCorrect) => {
+    const handlePlayerAnswer = (playerIndex, isCorrect, addValue) => {
         if (playersAnswers[playerIndex] !== 0 || playersAnswers.some(a => a === 1)) return
-        const addScore = VALUES[selectedQuestionIndex] * round
-        updateScore(playerIndex, addScore, isCorrect)
+
+        updateScore(playerIndex, addValue, isCorrect)
 
         const newPlayersAnswers = Object.assign([], playersAnswers)
         newPlayersAnswers[playerIndex] = isCorrect ? 1 : -1
         setPlayersAnswers(newPlayersAnswers)
+    }
+
+    const handleCatPlayerChanged = (e) => {
+        setCatPlayerIndex(+e.target.value);
+    }
+
+    const handleCatValueChanged = (e) => {
+        setCatValue(+e.target.value);
+    }
+
+    const handlePlayCat = () => {
+        console.log(catPlayerIndex, players[catPlayerIndex]);
+        console.log(catValue);
+        setShowCat(false);
+        let playersAnswers = new Array(players.length).fill(null).map((v, i) => i === catPlayerIndex ? 0 : -1);
+        setPlayersAnswers(playersAnswers);
     }
 
 
@@ -71,6 +100,16 @@ export default function GameBoard(props) {
             values={VALUES}
             round={round} />)
 
+
+    const catPlayers = players.map((p, i) => <option disabled={p.isActive} key={i} value={i}>{p.name}</option>);
+    const showQuestion = selectedTopicIndex !== -1 && selectedQuestionIndex !== -1 && !showCat;
+    const questionValue =
+        !showQuestion
+            ? 0
+            : roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].isCat
+                ? catValue
+                : VALUES[selectedQuestionIndex] * round;
+
     return (
         showingTopicIndex >= 0 ?
             <Topic topicName={roundData.topics[showingTopicIndex].name} /> :
@@ -79,8 +118,8 @@ export default function GameBoard(props) {
 
             <div className='Gameboard' >
                 <div className='content'>
-                    {selectedQuestionIndex === -1 && topicsRows}
-                    {selectedQuestionIndex !== -1 &&
+                    {!showQuestion && topicsRows}
+                    {showQuestion &&
                         <Question
                             topicName={roundData.topics[selectedTopicIndex].name}
                             question={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].question}
@@ -95,12 +134,39 @@ export default function GameBoard(props) {
 
                 <Score
                     players={players}
-                    selectedQuestionIndex={selectedQuestionIndex}
+                    canAnswer={showQuestion}
                     playersAnswers={playersAnswers}
                     handlePlayerAnswer={handlePlayerAnswer}
                     changeScore={changeScore}
                     setShowFinalScore={setShowFinalScore}
+                    questionValue={questionValue}
                 />
+
+                <Modal show={showCat} onHide={() => setShowCat(false)} centered backdrop={false}>
+                    <Modal.Header>
+                        <Modal.Title>Кот в мешке. Тема: {123}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label>Игрок</Form.Label>
+                                <Form.Control as="select" value={catPlayerIndex} onChange={handleCatPlayerChanged}>
+                                    {catPlayers}
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Стоимость</Form.Label>
+                                <Form.Control as="select" value={catValue} onChange={handleCatValueChanged}>
+                                    <option value={VALUES[0] * round}>{VALUES[0] * round}</option>
+                                    <option value={VALUES[VALUES.length - 1] * round}>{VALUES[VALUES.length - 1] * round}</option>
+                                </Form.Control>
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={handlePlayCat} block disabled={players[catPlayerIndex].isActive}>Играть вопрос</Button>
+                    </Modal.Footer>
+                </Modal>
 
             </div>
     )
