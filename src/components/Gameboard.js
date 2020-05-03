@@ -3,13 +3,12 @@ import Question from './Question';
 import TopicRow from './TopicRow';
 import Score from './Score';
 import Topic from './Topic';
-import FinalScore from './FinalScore';
-import {ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIME_MSECS, VALUES} from './../helpers/constants'
+import { ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIME_MSECS, VALUES } from './../helpers/constants'
 
 export default function GameBoard(props) {
-    
 
-    const { players, updateScore, round, roundData, updateRound, isLimitedTime, limitedTime, changeScore, isFinalRound } = props
+
+    const { players, updateScore, round, roundData, isLimitedTime, limitedTime, changeScore, setShowFinalScore } = props
 
     const [showingTopicIndex, setShowingTopicIndex] = useState(0)
 
@@ -20,8 +19,6 @@ export default function GameBoard(props) {
 
     const [selectedTopicIndex, setSelectedTopicIndex] = useState(-1)
     const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(-1)
-
-    const [showFinalScore, setShowFinalScore] = useState(false)
 
     //ответы игроков на текущий вопрос. 0 - не давал ответа, -1 - неправильный ответ, 1 - правильный ответ
     const [playersAnswers, setPlayersAnswers] = useState(new Array(players.length).fill(0))
@@ -78,34 +75,33 @@ export default function GameBoard(props) {
         showingTopicIndex >= 0 ?
             <Topic topicName={roundData.topics[showingTopicIndex].name} /> :
 
-            showFinalScore ?
-                <FinalScore players={players} updateRound={updateRound} isFinalRound={isFinalRound} /> :
 
-                <div className='Gameboard' >
-                    <div className='content'>
-                        {selectedQuestionIndex === -1 && topicsRows}
-                        {selectedQuestionIndex !== -1 &&
-                            <Question
-                                topicName={roundData.topics[selectedTopicIndex].name}
-                                question={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].question}
-                                answer={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].answer}
-                                isLimitedTime={isLimitedTime}
-                                limitedTime={limitedTime}
-                                playersAnswers={playersAnswers}
-                                goToGameBoard={() => handleQuestionSelect(-1, -1)}
-                                isFinalRound={false}
-                            />}
-                    </div>
 
-                    <Score
-                        players={players}
-                        selectedQuestionIndex={selectedQuestionIndex}
-                        playersAnswers={playersAnswers}
-                        handlePlayerAnswer={handlePlayerAnswer}
-                        changeScore={changeScore}
-                        setShowFinalScore={setShowFinalScore}
-                    />
-
+            <div className='Gameboard' >
+                <div className='content'>
+                    {selectedQuestionIndex === -1 && topicsRows}
+                    {selectedQuestionIndex !== -1 &&
+                        <Question
+                            topicName={roundData.topics[selectedTopicIndex].name}
+                            question={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].question}
+                            answer={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].answer}
+                            isLimitedTime={isLimitedTime}
+                            limitedTime={limitedTime}
+                            playersAnswers={playersAnswers}
+                            goToGameBoard={() => handleQuestionSelect(-1, -1)}
+                            isFinalRound={false}
+                        />}
                 </div>
+
+                <Score
+                    players={players}
+                    selectedQuestionIndex={selectedQuestionIndex}
+                    playersAnswers={playersAnswers}
+                    handlePlayerAnswer={handlePlayerAnswer}
+                    changeScore={changeScore}
+                    setShowFinalScore={setShowFinalScore}
+                />
+
+            </div>
     )
 }

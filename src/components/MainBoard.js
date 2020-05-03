@@ -7,6 +7,7 @@ import Loading from './Loading';
 import { parseDb } from '../helpers/parsers';
 import { ROUNDS_COUNT, SHOW_ROUND_TIME_MSECS, corsProxy, packageApi } from './../helpers/constants'
 import FinalRound from './FinalRound';
+import FinalScore from './FinalScore';
 
 function MainBoard(props) {
 
@@ -21,6 +22,7 @@ function MainBoard(props) {
 
     const [round, setRound] = useState(1)
     const [showRound, setShowRound] = useState(false)
+    const [showFinalScore, setShowFinalScore] = useState(false);
 
     let topics = questionsPackage
         ? questionsPackage.rounds.map(r => r.topics).reduce((res, cur) => [...res, ...cur], []).map(topic => topic.name)
@@ -82,6 +84,7 @@ function MainBoard(props) {
     const updateRound = () => {
         if (!isFinalRound) {
             setRound(round + 1)
+            setShowFinalScore(false)
             setShowRound(true)
 
             setTimeout(() => {
@@ -125,23 +128,25 @@ function MainBoard(props) {
                 : showRound
 
                     ? <Round round={round} />
-                    : round <= ROUNDS_COUNT
-                        ? <GameBoard
-                            players={players}
-                            questionsPackage={questionsPackage}
-                            updateScore={updateScore}
-                            round={round}
-                            roundData={questionsPackage.rounds[round - 1]}
-                            updateRound={updateRound}
-                            isLimitedTime={isLimitedTime}
-                            limitedTime={limitedTime}
-                            changeScore={changeScore}
-                            isFinalRound={isFinalRound}
-                        />
-                        : <FinalRound 
-                            finalRoundData={questionsPackage.finalRound}
-                            players={players}
-                            changeScore={changeScore}/>
+                    : showFinalScore
+                        ? <FinalScore players={players} updateRound={updateRound} isFinalRound={isFinalRound} />
+                        : round <= ROUNDS_COUNT
+                            ? <GameBoard
+                                players={players}
+                                questionsPackage={questionsPackage}
+                                updateScore={updateScore}
+                                round={round}
+                                roundData={questionsPackage.rounds[round - 1]}
+                                isLimitedTime={isLimitedTime}
+                                limitedTime={limitedTime}
+                                changeScore={changeScore}
+                                setShowFinalScore={setShowFinalScore}
+                            />
+                            : <FinalRound
+                                finalRoundData={questionsPackage.finalRound}
+                                players={players}
+                                changeScore={changeScore} 
+                                setShowFinalScore={setShowFinalScore}/>
 
     )
 }

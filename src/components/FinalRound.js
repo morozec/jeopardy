@@ -5,7 +5,7 @@ import { FINAL_ROUND_TIME_SECS } from '../helpers/constants';
 import Score from './Score';
 
 export default function FinalRound(props) {
-    const { finalRoundData, players, changeScore } = props;
+    const { finalRoundData, players, changeScore, setShowFinalScore } = props;
     const [questions, setQuestions] = useState([...finalRoundData.questions]);
     const [finalQuestion, setFinalQuestion] = useState(null)
 
@@ -41,7 +41,7 @@ export default function FinalRound(props) {
                 // playersAnswers={playersAnswers}
                 // handlePlayerAnswer={handlePlayerAnswer}
                 changeScore={changeScore}
-                // setShowFinalScore={setShowFinalScore}
+                setShowFinalScore={setShowFinalScore}
             />
         </div>
     )
