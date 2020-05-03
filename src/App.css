@@ -20,7 +20,6 @@ html, body, #root{
 
 .player-info-container{
   /* margin-top: auto; */
-  flex:1;
   display: flex;
   flex-direction: row;
   background-color: blue;
@@ -90,7 +89,7 @@ html, body, #root{
 }
 
 .content{
-  flex:11;
+  flex:1;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -202,8 +201,14 @@ html, body, #root{
   align-items: center;
 }
 
-.final-round-topics-container{
+.final-round-container{
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.final-round-topics-container{
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 
 export default function Question(props) {
-    const { topic, question, answer, isLimitedTime, goToGameBoard, playersAnswers } = props
+    const { topic, question, answer, isLimitedTime, goToGameBoard, playersAnswers, isFinalRound } = props
     const [showAnswer, setShowAnswer] = useState(false)
     const [timeLeft, setTimeLeft] = useState(props.limitedTime)
     const [isPause, setIsPause] = useState(false)
@@ -13,14 +13,14 @@ export default function Question(props) {
     useEffect(() => {
         if (needShowAnswer) return
         if (timeLeft <= 0) {
-            setShowAnswer(true)
+            if (!isFinalRound) setShowAnswer(true)
             return
         }
 
         if (isPause) return
         const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
         return () => clearInterval(timerId)
-    }, [timeLeft, isPause, needShowAnswer])
+    }, [timeLeft, isPause, needShowAnswer, isFinalRound])
 
     const handlePauseClick = () => {
         setIsPause(!isPause)

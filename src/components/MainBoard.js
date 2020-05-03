@@ -138,7 +138,10 @@ function MainBoard(props) {
                             changeScore={changeScore}
                             isFinalRound={isFinalRound}
                         />
-                        : <FinalRound finalRoundData={questionsPackage.finalRound}/>
+                        : <FinalRound 
+                            finalRoundData={questionsPackage.finalRound}
+                            players={players}
+                            changeScore={changeScore}/>
 
     )
 }

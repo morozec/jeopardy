@@ -93,6 +93,7 @@ export default function GameBoard(props) {
                                 limitedTime={limitedTime}
                                 playersAnswers={playersAnswers}
                                 goToGameBoard={() => handleQuestionSelect(-1, -1)}
+                                isFinalRound={false}
                             />}
                     </div>
 

@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import Question from './Question';
 import { FINAL_ROUND_TIME_SECS } from '../helpers/constants';
+import Score from './Score';
 
 export default function FinalRound(props) {
-    const { finalRoundData } = props;
+    const { finalRoundData, players, changeScore } = props;
     const [questions, setQuestions] = useState([...finalRoundData.questions]);
     const [finalQuestion, setFinalQuestion] = useState(null)
 
     const handleTopicClick = (id) => {
-        if (questions.length === 1){
+        if (questions.length === 1) {
             setFinalQuestion(questions[0]);
         }
         setQuestions(questions.filter(q => q.id !== id));
@@ -20,16 +21,28 @@ export default function FinalRound(props) {
     ))
 
     return (
-        <Container className='final-round-topics-container'>
-            {!finalQuestion && topics}
-            {finalQuestion && <Question
-                topicName={finalQuestion.topicName}
-                question={finalQuestion.question}
-                answer={finalQuestion.answer}
-                isLimitedTime={true}
-                limitedTime={FINAL_ROUND_TIME_SECS}
-                playersAnswers={[]}
-            />}
-        </Container>
+        <div className='final-round-container'>
+            <Container className='final-round-topics-container'>
+                {!finalQuestion && topics}
+                {finalQuestion && <Question
+                    topicName={finalQuestion.topicName}
+                    question={finalQuestion.question}
+                    answer={finalQuestion.answer}
+                    isLimitedTime={true}
+                    limitedTime={FINAL_ROUND_TIME_SECS}
+                    playersAnswers={[]}
+                    isFinalRound={true}
+                />}
+            </Container>
+
+            <Score
+                players={players}
+                selectedQuestionIndex={-1}
+                // playersAnswers={playersAnswers}
+                // handlePlayerAnswer={handlePlayerAnswer}
+                changeScore={changeScore}
+                // setShowFinalScore={setShowFinalScore}
+            />
+        </div>
     )
 }
