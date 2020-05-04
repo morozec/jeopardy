@@ -25,6 +25,7 @@ export default function GameBoard(props) {
     const [playersAnswers, setPlayersAnswers] = useState(new Array(players.length).fill(0))
 
     const [showCat, setShowCat] = useState(false);
+    const [catTopic, setCatTopic] = useState("");
     const [catPlayerIndex, setCatPlayerIndex] = useState(0);
     const [catValue, setCatValue] = useState(VALUES[0] * round);
 
@@ -50,6 +51,7 @@ export default function GameBoard(props) {
 
         if (isQuestionSelected) {
             if (roundData.topics[topicIndex].questions[questionIndex].isCat) {
+                setCatTopic(roundData.topics[topicIndex].questions[questionIndex].topicName)
                 setShowCat(true);
                 return;
             }
@@ -176,7 +178,9 @@ export default function GameBoard(props) {
 
                 <Modal show={showCat} onHide={() => setShowCat(false)} centered backdrop={false}>
                     <Modal.Header>
-                        <Modal.Title>Кот в мешке. Тема: {123}</Modal.Title>
+                        <Modal.Title>
+                            Кот в мешке. Тема: {catTopic}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Form>
