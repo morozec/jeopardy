@@ -16,7 +16,8 @@
 						{
 						  "id": "1.1.2",			 
 						  "question": "1*1*2?",
-						  "answer": "2"			 
+						  "answer": "2",
+						  "isAuction":true
 						},
 						{
 						  "id": "1.1.3",			 
@@ -246,7 +247,8 @@
 						{
 						  "id": "2.2.3",			 
 						  "question": "2*2*3?",
-						  "answer": "12"			 
+						  "answer": "12",
+						  "isAuction":true
 						},
 						{
 						  "id": "2.2.4",			 
@@ -476,7 +478,8 @@
 						{
 						  "id": "3.3.4",			 
 						  "question": "3*3*4?",
-						  "answer": "36"			 
+						  "answer": "36",
+						  "isAuction":true
 						},
 						{
 						  "id": "3.3.5",			 
