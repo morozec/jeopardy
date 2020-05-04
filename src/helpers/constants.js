@@ -7,6 +7,7 @@ export const SHOW_TOPICS_TIME_MSECS = 100
 export const FINAL_ROUND_TIME_SECS = 60
 
 export const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+export const groupsApi = 'http://api.baza-voprosov.ru/groups/SVOYAK';
 export const packageApi = 'http://api.baza-voprosov.ru/packages/';
 
 export const VALUES = [100, 200, 300, 400, 500]
