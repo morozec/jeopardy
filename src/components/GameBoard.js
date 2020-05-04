@@ -76,8 +76,8 @@ export default function GameBoard(props) {
 
     const handlePlayerAnswer = (playerIndex, isCorrect, addScore) => {
         if (playersAnswers[playerIndex] !== 0 || playersAnswers.some(a => a === 1)) return
-
-        updateScore(playerIndex, addScore, isCorrect)
+        const question = roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex];
+        updateScore(playerIndex, addScore, isCorrect, question.isCat || question.isAuction)
 
         const newPlayersAnswers = Object.assign([], playersAnswers)
         newPlayersAnswers[playerIndex] = isCorrect ? 1 : -1
