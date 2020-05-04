@@ -3,7 +3,7 @@ import Question from './Question';
 import TopicRow from './TopicRow';
 import Score from './Score';
 import Topic from './Topic';
-import { ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIME_MSECS, VALUES } from './../helpers/constants'
+import { ROUND_TOPICS_COUNT, TOPIC_QUESTIONS_COUNT, SHOW_TOPICS_TIME_MSECS, VALUES } from '../helpers/constants'
 import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function GameBoard(props) {
@@ -28,6 +28,10 @@ export default function GameBoard(props) {
     const [catPlayerIndex, setCatPlayerIndex] = useState(0);
     const [catValue, setCatValue] = useState(VALUES[0] * round);
 
+    const [showAuction, setShowAuction] = useState(false);
+    const [auctionPlayerIndex, setAuctionPlayerIndex] = useState(0);
+    const [auctionValue, setAuctionValue] = useState(0);
+
     useEffect(() => {
         if (showingTopicIndex === -1) return;
         const timerId = setTimeout(() =>
@@ -49,6 +53,11 @@ export default function GameBoard(props) {
                 setShowCat(true);
                 return;
             }
+            if (roundData.topics[topicIndex].questions[questionIndex].isAuction) {
+                setAuctionValue(VALUES[questionIndex] * round);
+                setShowAuction(true);
+                return;
+            }
         }
 
         if (!isQuestionSelected) { //вернулись на главный экран
@@ -63,15 +72,17 @@ export default function GameBoard(props) {
         }
     }
 
-    const handlePlayerAnswer = (playerIndex, isCorrect, addValue) => {
+    const handlePlayerAnswer = (playerIndex, isCorrect, addScore) => {
         if (playersAnswers[playerIndex] !== 0 || playersAnswers.some(a => a === 1)) return
 
-        updateScore(playerIndex, addValue, isCorrect)
+        updateScore(playerIndex, addScore, isCorrect)
 
         const newPlayersAnswers = Object.assign([], playersAnswers)
         newPlayersAnswers[playerIndex] = isCorrect ? 1 : -1
         setPlayersAnswers(newPlayersAnswers)
     }
+
+    const catPlayers = players.map((p, i) => <option disabled={p.isActive} key={i} value={i}>{p.name}</option>);
 
     const handleCatPlayerChanged = (e) => {
         setCatPlayerIndex(+e.target.value);
@@ -82,13 +93,32 @@ export default function GameBoard(props) {
     }
 
     const handlePlayCat = () => {
-        console.log(catPlayerIndex, players[catPlayerIndex]);
-        console.log(catValue);
         setShowCat(false);
         let playersAnswers = new Array(players.length).fill(null).map((v, i) => i === catPlayerIndex ? 0 : -1);
         setPlayersAnswers(playersAnswers);
     }
 
+
+    const canPlayAuction = (i) => players[i].isActive || players[i].score > VALUES[selectedQuestionIndex] * round;
+    const getAuctionMinValue = (i) => VALUES[selectedQuestionIndex] * round;
+    const getAuctionMaxValue = (i) => Math.max(VALUES[selectedQuestionIndex] * round, players[i].score);
+
+
+    const auctionPlayers = players.map((p, i) => <option disabled={!canPlayAuction(i)} key={i} value={i}>{p.name}</option>)
+
+    const handleAuctionPlayerChanged = (e) => {
+        setAuctionPlayerIndex(+e.target.value);
+    }
+
+    const handleAuctionValueChanged = (e) => {
+        setAuctionValue(+e.target.value);
+    }
+
+    const handlePlayAuction = () => {
+        setShowAuction(false);
+        let playersAnswers = new Array(players.length).fill(null).map((v, i) => i === auctionPlayerIndex ? 0 : -1);
+        setPlayersAnswers(playersAnswers);
+    }
 
     const topicsRows = roundData.topics.map((td, index) =>
         <TopicRow
@@ -101,14 +131,16 @@ export default function GameBoard(props) {
             round={round} />)
 
 
-    const catPlayers = players.map((p, i) => <option disabled={p.isActive} key={i} value={i}>{p.name}</option>);
-    const showQuestion = selectedTopicIndex !== -1 && selectedQuestionIndex !== -1 && !showCat;
+
+    const showQuestion = selectedTopicIndex !== -1 && selectedQuestionIndex !== -1 && !showCat && !showAuction;
     const questionValue =
         !showQuestion
             ? 0
             : roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].isCat
                 ? catValue
-                : VALUES[selectedQuestionIndex] * round;
+                : roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].isAuction
+                    ? auctionValue
+                    : VALUES[selectedQuestionIndex] * round;
 
     return (
         showingTopicIndex >= 0 ?
@@ -149,14 +181,14 @@ export default function GameBoard(props) {
                     <Modal.Body>
                         <Form>
                             <Form.Group>
-                                <Form.Label>Игрок</Form.Label>
-                                <Form.Control as="select" value={catPlayerIndex} onChange={handleCatPlayerChanged}>
+                                <Form.Label htmlFor='catPlayer'>Игрок</Form.Label>
+                                <Form.Control as="select" value={catPlayerIndex} onChange={handleCatPlayerChanged} id='catPlayer'>
                                     {catPlayers}
                                 </Form.Control>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Label>Стоимость</Form.Label>
-                                <Form.Control as="select" value={catValue} onChange={handleCatValueChanged}>
+                                <Form.Label htmlFor='catValue'>Стоимость</Form.Label>
+                                <Form.Control as="select" value={catValue} onChange={handleCatValueChanged} id='catValue'>
                                     <option value={VALUES[0] * round}>{VALUES[0] * round}</option>
                                     <option value={VALUES[VALUES.length - 1] * round}>{VALUES[VALUES.length - 1] * round}</option>
                                 </Form.Control>
@@ -168,6 +200,42 @@ export default function GameBoard(props) {
                     </Modal.Footer>
                 </Modal>
 
-            </div>
+                <Modal show={showAuction} onHide={() => setShowAuction(false)} centered backdrop={false}>
+                    <Modal.Header>
+                        <Modal.Title>Вопрос-аукцион</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label htmlFor='auctionPlayer'>Игрок</Form.Label>
+                                <Form.Control as="select" value={auctionPlayerIndex} onChange={handleAuctionPlayerChanged} id='auctionPlayer'>
+                                    {auctionPlayers}
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label htmlFor='auctionValue'>Ставка</Form.Label>
+                                <Form.Control as="input"
+                                    type="number"
+                                    step={100}
+                                    min={getAuctionMinValue(auctionPlayerIndex)}
+                                    max={getAuctionMaxValue(auctionPlayerIndex)}
+                                    value={auctionValue}
+                                    onChange={handleAuctionValueChanged}
+                                    id='auctionValue'
+                                >
+                                </Form.Control>
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={handlePlayAuction} block disabled={
+                            !(canPlayAuction(auctionPlayerIndex)
+                                && auctionValue >= getAuctionMinValue(auctionPlayerIndex)
+                                && auctionValue <= getAuctionMaxValue(auctionPlayerIndex))
+                        }>Играть вопрос</Button>
+                    </Modal.Footer>
+                </Modal>
+
+            </div >
     )
 }
