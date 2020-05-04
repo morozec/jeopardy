@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap'
 
 export default function Score(props) {
 
-    const { players, selectedQuestionIndex, handlePlayerAnswer, playersAnswers, changeScore, setShowFinalScore } = props
+    const { players, canAnswer, handlePlayerAnswer, playersAnswers, changeScore, setShowFinalScore, questionValue } = props
     const [isEditMode, setIsEditMode] = useState(new Array(players.length).fill(0))
     const [editingScore, setEditingScore] = useState(0)
 
@@ -40,9 +40,9 @@ export default function Score(props) {
     const playersScores = players.map((p, i) => (
         <div key={i} className={`player-info ${p.isActive ? 'is-current' : ''}`} onKeyDown={(e) => handleKeyDown(e, i)}>
 
-            {selectedQuestionIndex !== -1 && <img src={wrongImg} alt='wrong'
+            {canAnswer && <img src={wrongImg} alt='wrong'
                 className={`pa-button ${playersAnswers[i] !== 0 || playersAnswers.some(a => a === 1) ? 'disabled' : ''}`}
-                onClick={() => handlePlayerAnswer(i, false)} />}
+                onClick={() => handlePlayerAnswer(i, false, questionValue)} />}
 
             <div>{p.name}</div>
             {isEditMode[i]===0 && <div className='player-score' onDoubleClick={() => handleStartEdit(p.score, i)}>{p.score}</div>}
@@ -50,9 +50,9 @@ export default function Score(props) {
             {isEditMode[i]===1 && <Button onClick={() => finishScoreChange(i, true)}>Ok</Button>}
             {isEditMode[i]===1 && <Button onClick={() => finishScoreChange(i, false)}>Отмена</Button>}
 
-            {selectedQuestionIndex !== -1 && <img src={correctImg} alt='correct'
+            {canAnswer && <img src={correctImg} alt='correct'
                 className={`pa-button ${playersAnswers[i] !== 0 || playersAnswers.some(a => a === 1) ? 'disabled' : ''}`}
-                onClick={() => handlePlayerAnswer(i, true)} />}
+                onClick={() => handlePlayerAnswer(i, true, questionValue)} />}
 
         </div>
     ))
