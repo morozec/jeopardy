@@ -24,7 +24,8 @@ export default function Registration(props) {
     const [packages, setPackages] = useState([])
 
     const [userFileName, setUserFileName] = useState("");
-    const [selectedPackegeName, setSelectedPackageName] = useState("");
+    const [selectedPackegeId, setSelectedPackageId] = useState(-1);
+
     const [questionPackage, setQuestionPackage] = useState(null)
 
     const [showError, setShowError] = useState(false);
@@ -56,8 +57,18 @@ export default function Registration(props) {
     }
 
     const handleChangePackageSource = (e) => {
-        console.log(e)
         setPackageSource(e);
+        if (e === 1) {//вопросы из базы
+            setIsLoading(true)
+
+            fetch(corsProxy + groupsApi)
+                .then(response => response.json())
+                .then(obj => {
+                    setPackages(obj.packages);
+                    //setSelectedPackageName(obj.packages[0])
+                })
+                .finally(() => setIsLoading(false))
+        }
     }
 
     const handleIsLimitedTimeChanged = (e) => {
@@ -109,6 +120,7 @@ export default function Registration(props) {
             .then(response => response.json())
             .then(obj => {
                 setPackages(obj.packages);
+
             })
             .finally(() => setIsPackagesLoading(false))
     }
@@ -118,7 +130,7 @@ export default function Registration(props) {
             try {
                 setIsLoading(true);
                 let qp = await parseSelectedPackage(pack);
-                setSelectedPackageName(pack.title);
+                //setSelectedPackageName(pack.title);
                 setQuestionPackage(qp);
             } catch (err) {
                 setErrorMessage(err.message);
@@ -130,10 +142,13 @@ export default function Registration(props) {
     }
 
     const packagesList = packages.map((p) =>
-        <Button variant='secondary' key={p.id} onClick={() => { handlePackageSelected(p); setShowGames(false); }} block>
+        <Button variant='success' key={p.id} onClick={() => { handlePackageSelected(p); setShowGames(false); }} block>
             {p.title}
         </Button>
     )
+
+    const packagesOptions = [<option key={-1} value={-1} disabled={true}>Выбрать пакет...</option>,
+        ...packages.map(p => <option key={p.id} value={p.id}>{p.title}</option>)]
 
     const handleHideGames = () => {
         setShowGames(false);
@@ -149,6 +164,23 @@ export default function Registration(props) {
     const handleNewPlayerLoad = () => {
         let newPlayerNameInput = document.getElementById('new-player-name');
         newPlayerNameInput.select();
+    }
+
+    const handleSelectedPackageChanged = (e) => {
+        let id = e.target.value;
+        (async function () {
+            try {
+                setIsLoading(true);
+                let qp = await parseSelectedPackage(id);
+                setSelectedPackageId(id);
+                setQuestionPackage(qp);
+            } catch (err) {
+                setErrorMessage(err.message);
+                setShowError(true);
+            } finally {
+                setIsLoading(false);
+            }
+        })()
     }
 
     return (
@@ -172,34 +204,45 @@ export default function Registration(props) {
 
 
                     <ToggleButtonGroup type="radio" name="packageSource" value={packageSource} onChange={handleChangePackageSource}
-                        className='d-flex'>
+                        className='d-flex mb-2'>
                         <ToggleButton variant='outline-secondary' value={0}>Вопросы из локального файла</ToggleButton>
                         <ToggleButton variant='outline-secondary' value={1}>Вопросы из базы <strong>db.chgk.info</strong></ToggleButton>
                     </ToggleButtonGroup>
 
 
                     {packageSource === 0 &&
-                        <div className="custom-file mb-2">
-                            <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
-                            <label className="custom-file-label" htmlFor="packageFile">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
-                        </div>}
-                    {packageSource === 0 && <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>}
+                        <div className='d-flex'>
+                            <div className="custom-file mb-2 half-width mr-1 ">
+                                <input type="file" className="custom-file-input pointer" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
+                                <label className="custom-file-label" htmlFor="packageFile" data-browse="Обзор...">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
+                            </div>
+                            <div className='half-width ml-1'>
+                                <Button variant='secondary' href='/package.json' block download>Скачать шаблон</Button>
+                            </div>
+                        </div>
+                    }
 
                     {packageSource === 1 &&
 
-                        <div className="input-group mb-2">
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={selectedPackegeName}
-                                placeholder='Игра не выбрана'
-                                disabled={true} />
-                            <div className="input-group-append">
-                                <button className="btn btn-secondary" type="button" onClick={handleShowGames}>
-                                    Выбрать игру из базы
-                            </button>
-                            </div>
-                        </div>
+                        // <div className="input-group mb-2">
+                        //     <input
+                        //         type="text"
+                        //         className="form-control"
+                        //         value={selectedPackegeName}
+                        //         placeholder='Игра не выбрана'
+                        //         disabled={true} />
+                        //     <div className="input-group-append">
+                        //         <button className="btn btn-secondary" type="button" onClick={handleShowGames}>
+                        //             Выбрать игру из базы
+                        //     </button>
+                        //     </div>
+                        // </div>
+
+                        <Form.Group>
+                            <Form.Control as="select" value={selectedPackegeId} onChange={handleSelectedPackageChanged}>
+                                {packagesOptions}
+                            </Form.Control>
+                        </Form.Group>
 
                     }
 

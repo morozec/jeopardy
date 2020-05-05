@@ -18,8 +18,8 @@ export const parseUserFile = (userFile) => {
     return readFileAsync(userFile);
 }
 
-export const parseSelectedPackage = async (selectedPackage) => {
-    let respose = await fetch(`${corsProxy}${packageApi}${selectedPackage.id}`)
+export const parseSelectedPackage = async (selectedPackageId) => {
+    let respose = await fetch(`${corsProxy}${packageApi}${selectedPackageId}`)
     let pack = await respose.json();
        
     const data = pack.tours[0].questions.slice(0, ROUNDS_COUNT * ROUND_TOPICS_COUNT)
