@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import plus from './../img/plus.png'
 import minus from './../img/minus.png'
-import { Modal, Button, Container, ListGroup, Form } from 'react-bootstrap';
+import { Modal, Button, Container, ListGroup, Form, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 import Loading from './Loading';
 import { parseSelectedPackage, parseUserFile } from '../helpers/parsers';
 import { corsProxy, groupsApi } from '../helpers/constants'
@@ -14,7 +14,8 @@ export default function Registration(props) {
     const [showNewPlayer, setShowNewPlayer] = useState(false)
     const [newPlayerName, setNewPlayerName] = useState('');
 
-    const [isDbSource, setIsDbSource] = useState(false)
+    const [packageSource, setPackageSource] = useState(0)
+
     const [isLimitedTime, setIsLimitedTime] = useState(false)
     const [limitedTime, setLimitedTime] = useState(20)
     const [showGames, setShowGames] = useState(false)
@@ -54,8 +55,9 @@ export default function Registration(props) {
         setPlayers(newPlayers)
     }
 
-    const handleIsDbSourceChange = (e) => {
-        setIsDbSource(e.target.checked)
+    const handleChangePackageSource = (e) => {
+        console.log(e)
+        setPackageSource(e);
     }
 
     const handleIsLimitedTimeChanged = (e) => {
@@ -160,19 +162,30 @@ export default function Registration(props) {
                         {playersInputs}
                     </ListGroup>
 
-                    <div className='d-flex mt-2'>
-                        <Button variant='success' className='flex-fill mr-1' onClick={handlePlus}>Добавить</Button>
-                        <Button variant='danger' className='flex-fill ml-1' onClick={handleRemove}
+                    <div className='d-flex mt-2 mb-4'>
+                        <Button variant='success' className='half-width mr-1' onClick={handlePlus}>Добавить</Button>
+                        <Button variant='danger' className='half-width ml-1' onClick={handleRemove}
                             disabled={players.length <= 1 || selectedPlayer < 0 || selectedPlayer >= players.length}>
                             Удалить
                         </Button>
                     </div>
 
-                    <label>Использовать базу
-                <input type='checkbox' checked={isDbSource} onChange={handleIsDbSourceChange} />
-                    </label>
 
-                    {isDbSource &&
+                    <ToggleButtonGroup type="radio" name="packageSource" value={packageSource} onChange={handleChangePackageSource}
+                        className='d-flex'>
+                        <ToggleButton variant='outline-secondary' value={0}>Вопросы из локального файла</ToggleButton>
+                        <ToggleButton variant='outline-secondary' value={1}>Вопросы из базы <strong>db.chgk.info</strong></ToggleButton>
+                    </ToggleButtonGroup>
+
+
+                    {packageSource === 0 &&
+                        <div className="custom-file mb-2">
+                            <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
+                            <label className="custom-file-label" htmlFor="packageFile">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
+                        </div>}
+                    {packageSource === 0 && <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>}
+
+                    {packageSource === 1 &&
 
                         <div className="input-group mb-2">
                             <input
@@ -190,12 +203,7 @@ export default function Registration(props) {
 
                     }
 
-                    {!isDbSource &&
-                        <div className="custom-file mb-2">
-                            <input type="file" className="custom-file-input" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
-                            <label className="custom-file-label" htmlFor="packageFile">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
-                        </div>}
-                    {!isDbSource && <Button variant='info' block href='/package.json' download>Скачать шаблон</Button>}
+
 
                     <label>Ограниченное время на ответ
                 <input type='checkbox' checked={isLimitedTime} onChange={handleIsLimitedTimeChanged} />
@@ -248,8 +256,8 @@ export default function Registration(props) {
                             <Modal.Title>Добавление игрока</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Control id='new-player-name' type="text" placeholder="Введите имя" 
-                                value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)}/>
+                            <Form.Control id='new-player-name' type="text" placeholder="Введите имя"
+                                value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} />
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="primary" onClick={handleAddNewPlayer} disabled={newPlayerName === ''}>

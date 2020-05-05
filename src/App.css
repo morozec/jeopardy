@@ -221,3 +221,8 @@ html, body, #root{
 .pointer{
   cursor: pointer;
 }
+
+
+.half-width{
+  flex:1
+}
