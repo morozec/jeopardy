@@ -11,3 +11,4 @@ export const groupsApi = 'http://api.baza-voprosov.ru/groups/SVOYAK';
 export const packageApi = 'http://api.baza-voprosov.ru/packages/';
 
 export const VALUES = [100, 200, 300, 400, 500]
+export const ANSWER_SECONDS = [-1, 20, 30, 45, 60, 80, 120]

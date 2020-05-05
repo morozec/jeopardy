@@ -9,7 +9,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 export default function GameBoard(props) {
 
 
-    const { players, updateScore, round, roundData, isLimitedTime, limitedTime, changeScore, setShowFinalScore } = props
+    const { players, updateScore, round, roundData, limitedTime, changeScore, setShowFinalScore } = props
 
     const [showingTopicIndex, setShowingTopicIndex] = useState(0)
 
@@ -158,7 +158,6 @@ export default function GameBoard(props) {
                             topicName={roundData.topics[selectedTopicIndex].name}
                             question={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].question}
                             answer={roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex].answer}
-                            isLimitedTime={isLimitedTime}
                             limitedTime={limitedTime}
                             playersAnswers={playersAnswers}
                             goToGameBoard={() => handleQuestionSelect(-1, -1)}
