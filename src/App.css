@@ -222,12 +222,10 @@ html, body, #root{
   cursor: pointer;
 }
 
-
-.half-width{
-  flex:1
-}
-
 .start-game-link:hover{
   text-decoration: none;
 }
 
+.reg-label{
+  color: white;
+}

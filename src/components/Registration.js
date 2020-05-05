@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import plus from './../img/plus.png'
-import minus from './../img/minus.png'
 import { Modal, Button, Container, ListGroup, Form, ToggleButtonGroup, ToggleButton, Row, Col } from 'react-bootstrap';
 import Loading from './Loading';
 import { parseSelectedPackage, parseUserFile } from '../helpers/parsers';
@@ -17,9 +15,7 @@ export default function Registration(props) {
     const [packageSource, setPackageSource] = useState(0)
 
     const [limitedTime, setLimitedTime] = useState(-1)
-    const [showGames, setShowGames] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [isPackagesLoading, setIsPackagesLoading] = useState(false)
     const [packages, setPackages] = useState([])
 
     const [userFileName, setUserFileName] = useState("");
@@ -29,12 +25,6 @@ export default function Registration(props) {
 
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
-    const handleChange = (newValue, index) => {
-        const newPlayers = Object.assign([], players)
-        newPlayers[index] = newValue
-        setPlayers(newPlayers)
-    }
 
     const handlePlus = () => {
         setNewPlayerName(`Игрок ${lastPlayerIndex + 1}`);
@@ -70,13 +60,6 @@ export default function Registration(props) {
         }
     }
 
-
-    const playersInputs = players.map((p, i) => (
-        <ListGroup.Item className='text-center pointer' active={i === selectedPlayer} key={i} onClick={() => setSelectedPlayer(i)}>
-            {p}
-        </ListGroup.Item>
-    ))
-
     const handleUserLoadFile = (ev) => {
         const file = ev.target.files[0];
         (async function () {
@@ -92,50 +75,6 @@ export default function Registration(props) {
                 setIsLoading(false);
             }
         })();
-    }
-
-    const handleShowGames = () => {
-        setIsPackagesLoading(true)
-        setShowGames(true)
-
-        fetch(corsProxy + groupsApi)
-            .then(response => response.json())
-            .then(obj => {
-                setPackages(obj.packages);
-
-            })
-            .finally(() => setIsPackagesLoading(false))
-    }
-
-    const handlePackageSelected = (pack) => {
-        (async function () {
-            try {
-                setIsLoading(true);
-                let qp = await parseSelectedPackage(pack);
-                //setSelectedPackageName(pack.title);
-                setQuestionPackage(qp);
-            } catch (err) {
-                setErrorMessage(err.message);
-                setShowError(true);
-            } finally {
-                setIsLoading(false);
-            }
-        })()
-    }
-
-    const packagesList = packages.map((p) =>
-        <Button variant='success' key={p.id} onClick={() => { handlePackageSelected(p); setShowGames(false); }} block>
-            {p.title}
-        </Button>
-    )
-
-    const packagesOptions = [<option key={-1} value={-1} disabled={true}>Выбрать пакет...</option>,
-    ...packages.map(p => <option key={p.id} value={p.id}>{p.title}</option>)]
-
-    const answerSecondsOptions = ANSWER_SECONDS.map(as => <option key={as} value={as}>{as === -1 ? 'Не ограничено' : as}</option>)
-
-    const handleHideGames = () => {
-        setShowGames(false);
     }
 
     const handleHideError = () => {
@@ -166,6 +105,18 @@ export default function Registration(props) {
             }
         })()
     }
+
+    const playersInputs = players.map((p, i) => (
+        <ListGroup.Item className='text-center pointer' active={i === selectedPlayer} key={i} onClick={() => setSelectedPlayer(i)}>
+            {p}
+        </ListGroup.Item>
+    ))
+
+    const packagesOptions = [<option key={-1} value={-1} disabled={true}>Выбрать пакет...</option>,
+    ...packages.map(p => <option key={p.id} value={p.id}>{p.title}</option>)]
+
+    const answerSecondsOptions = ANSWER_SECONDS.map(as => <option key={as} value={as}>{as === -1 ? 'Не ограничено' : as}</option>)
+
 
     return (
         isLoading
@@ -234,7 +185,7 @@ export default function Registration(props) {
 
 
                         <Form.Group as={Row}>
-                            <Form.Label column sm='6'>Время на ответ (в секундах)</Form.Label>
+                            <Form.Label column sm='6' className='reg-label'>Время на ответ (в секундах)</Form.Label>
                             <Col sm='6'>
                                 <Form.Control as="select" value={limitedTime} onChange={(e) => setLimitedTime(+e.target.value)}>
                                     {answerSecondsOptions}
@@ -267,18 +218,6 @@ export default function Registration(props) {
 
                     </Form>
 
-
-                    <Modal show={showGames} onHide={handleHideGames} centered>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Список игр</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body className='packages-list'>{isPackagesLoading ? <Loading /> : packagesList}</Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" block onClick={handleHideGames}>
-                                Отмена
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
 
                     <Modal show={showError} onHide={handleHideError} centered>
                         <Modal.Header closeButton>
