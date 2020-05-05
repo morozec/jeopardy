@@ -70,7 +70,7 @@ export default function Registration(props) {
         }
     }
 
-  
+
     const playersInputs = players.map((p, i) => (
         <ListGroup.Item className='text-center pointer' active={i === selectedPlayer} key={i} onClick={() => setSelectedPlayer(i)}>
             {p}
@@ -232,7 +232,16 @@ export default function Registration(props) {
                             limitedTime: limitedTime,
                             questionsPackage: questionPackage
                         }}>
-                        <Button variant='primary' disabled={!questionPackage} block>Начать игру</Button>
+                        <Button variant='primary' disabled={!questionPackage} block
+                            title={
+                                players.length === 0
+                                    ? 'Добавьте хотя бы одного игрока'
+                                    : !questionPackage
+                                        ? 'Выберите игровой пакет'
+                                        : ''
+                            }>
+                            Начать игру
+                        </Button>
                     </Link>
 
 
