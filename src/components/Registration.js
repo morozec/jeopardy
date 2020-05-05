@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import plus from './../img/plus.png'
 import minus from './../img/minus.png'
-import { Modal, Button, Container, ListGroup, Form, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Modal, Button, Container, ListGroup, Form, ToggleButtonGroup, ToggleButton, Row, Col } from 'react-bootstrap';
 import Loading from './Loading';
 import { parseSelectedPackage, parseUserFile } from '../helpers/parsers';
-import { corsProxy, groupsApi } from '../helpers/constants'
+import { corsProxy, groupsApi, ANSWER_SECONDS } from '../helpers/constants'
 
 export default function Registration(props) {
     const [players, setPlayers] = useState(['Игрок 1'])
@@ -16,8 +16,7 @@ export default function Registration(props) {
 
     const [packageSource, setPackageSource] = useState(0)
 
-    const [isLimitedTime, setIsLimitedTime] = useState(false)
-    const [limitedTime, setLimitedTime] = useState(20)
+    const [limitedTime, setLimitedTime] = useState(-1)
     const [showGames, setShowGames] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [isPackagesLoading, setIsPackagesLoading] = useState(false)
@@ -71,24 +70,7 @@ export default function Registration(props) {
         }
     }
 
-    const handleIsLimitedTimeChanged = (e) => {
-        setIsLimitedTime(e.target.checked)
-    }
-
-    const handleLimitiedTimeChanged = (e) => {
-        setLimitedTime(e.target.value)
-    }
-
-    // const playersInputs = players.map((p, i) => (
-    //     <div className="player-input" key={i}>
-    //         <input value={p} autoFocus={i === 0}
-    //             onChange={(e) => handleChange(e.target.value, i)} />
-
-    //         <img src={minus} alt='remove player' className={`minus-img ${i === 0 ? 'disabled' : ''}`} onClick={() => handleMinus(i)} />
-
-    //     </div>
-    // ))
-
+  
     const playersInputs = players.map((p, i) => (
         <ListGroup.Item className='text-center pointer' active={i === selectedPlayer} key={i} onClick={() => setSelectedPlayer(i)}>
             {p}
@@ -148,7 +130,9 @@ export default function Registration(props) {
     )
 
     const packagesOptions = [<option key={-1} value={-1} disabled={true}>Выбрать пакет...</option>,
-        ...packages.map(p => <option key={p.id} value={p.id}>{p.title}</option>)]
+    ...packages.map(p => <option key={p.id} value={p.id}>{p.title}</option>)]
+
+    const answerSecondsOptions = ANSWER_SECONDS.map(as => <option key={as} value={as}>{as === -1 ? 'Не ограничено' : as}</option>)
 
     const handleHideGames = () => {
         setShowGames(false);
@@ -211,8 +195,8 @@ export default function Registration(props) {
 
 
                     {packageSource === 0 &&
-                        <div className='d-flex'>
-                            <div className="custom-file mb-2 half-width mr-1 ">
+                        <div className='d-flex mb-4'>
+                            <div className="custom-file half-width mr-1 ">
                                 <input type="file" className="custom-file-input pointer" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
                                 <label className="custom-file-label" htmlFor="packageFile" data-browse="Обзор...">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
                             </div>
@@ -223,50 +207,32 @@ export default function Registration(props) {
                     }
 
                     {packageSource === 1 &&
-
-                        // <div className="input-group mb-2">
-                        //     <input
-                        //         type="text"
-                        //         className="form-control"
-                        //         value={selectedPackegeName}
-                        //         placeholder='Игра не выбрана'
-                        //         disabled={true} />
-                        //     <div className="input-group-append">
-                        //         <button className="btn btn-secondary" type="button" onClick={handleShowGames}>
-                        //             Выбрать игру из базы
-                        //     </button>
-                        //     </div>
-                        // </div>
-
-                        <Form.Group>
+                        <Form.Group className='mb-4'>
                             <Form.Control as="select" value={selectedPackegeId} onChange={handleSelectedPackageChanged}>
                                 {packagesOptions}
                             </Form.Control>
                         </Form.Group>
-
                     }
 
 
+                    <Form.Group as={Row} className='mb-4'>
+                        <Form.Label column sm='6'>Время на ответ (в секундах)</Form.Label>
+                        <Col sm='6'>
+                            <Form.Control as="select" value={limitedTime} onChange={(e) => setLimitedTime(+e.target.value)}>
+                                {answerSecondsOptions}
+                            </Form.Control>
+                        </Col>
+                    </Form.Group>
 
-                    <label>Ограниченное время на ответ
-                <input type='checkbox' checked={isLimitedTime} onChange={handleIsLimitedTimeChanged} />
-                    </label>
-
-                    {isLimitedTime &&
-                        <label>Секунд на ответ
-                    <input type='text' value={limitedTime} onChange={handleLimitiedTimeChanged} />
-                        </label>
-                    }
 
                     <Link
                         to={{
                             pathname: '/',
                             playersNames: players,
-                            isLimitedTime: isLimitedTime,
                             limitedTime: limitedTime,
                             questionsPackage: questionPackage
                         }}>
-                        <Button variant='primary' disabled={!questionPackage}>Начать игру</Button>
+                        <Button variant='primary' disabled={!questionPackage} block>Начать игру</Button>
                     </Link>
 
 
