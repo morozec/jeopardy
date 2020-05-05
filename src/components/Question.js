@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 
 export default function Question(props) {
-    const { topic, question, answer, isLimitedTime, goToGameBoard, playersAnswers, isFinalRound } = props
+    const { topic, question, answer, limitedTime, goToGameBoard, playersAnswers, isFinalRound } = props
     const [showAnswer, setShowAnswer] = useState(false)
-    const [timeLeft, setTimeLeft] = useState(props.limitedTime)
+    const [timeLeft, setTimeLeft] = useState(limitedTime)
     const [isPause, setIsPause] = useState(false)
 
 
@@ -38,7 +38,7 @@ export default function Question(props) {
 
             {goToGameBoard && <Button disabled={!needShowAnswer} onClick={() => goToGameBoard()}>Главный экран</Button>}
 
-            {isLimitedTime && timeLeft > 0 && !needShowAnswer &&
+            {limitedTime !== -1 && timeLeft > 0 && !needShowAnswer &&
                 <div>
                     <label>{`Осталось секунд: ${timeLeft}`}</label>
                     <Button disabled={timeLeft === 0} onClick={handlePauseClick}>{isPause ? 'Продолжить' : 'Пауза'}</Button>

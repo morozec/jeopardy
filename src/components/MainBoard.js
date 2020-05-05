@@ -10,7 +10,7 @@ import FinalScore from './FinalScore';
 
 function MainBoard(props) {
     
-    const { playersNames, isLimitedTime, limitedTime, questionsPackage } = props.location
+    const { playersNames, limitedTime, questionsPackage } = props.location
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map((pn, i) => new Player(pn, 0, i === 0)) : [])
 
@@ -91,7 +91,6 @@ function MainBoard(props) {
                             updateScore={updateScore}
                             round={round}
                             roundData={questionsPackage.rounds[round - 1]}
-                            isLimitedTime={isLimitedTime}
                             limitedTime={limitedTime}
                             changeScore={changeScore}
                             setShowFinalScore={setShowFinalScore}
