@@ -14,7 +14,7 @@ function MainBoard(props) {
 
     const [players, setPlayers] = useState(() => playersNames ? playersNames.map((pn, i) => new Player(pn, 0, i === 0)) : [])
 
-    const [showAllTopics, setShowAllTopics] = useState(false)
+    const [showAllTopics, setShowAllTopics] = useState(true)
 
     const [round, setRound] = useState(1)
     const [showRound, setShowRound] = useState(false)
@@ -40,6 +40,15 @@ function MainBoard(props) {
             setRound(round + 1)
             setShowFinalScore(false)
             setShowRound(true)
+
+            //делаем всех игроков неактивными в фильнальном раунде
+            if (round + 1 === ROUNDS_COUNT + 1){
+                const newPlayers = Object.assign([], players);
+                for (let np of newPlayers){
+                    np.isActive = false;
+                }
+                setPlayers(newPlayers);
+            }
 
             setTimeout(() => {
                 setShowRound(false)

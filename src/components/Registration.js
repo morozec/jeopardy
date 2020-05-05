@@ -107,7 +107,7 @@ export default function Registration(props) {
     }
 
     const playersInputs = players.map((p, i) => (
-        <ListGroup.Item className='text-center pointer' active={i === selectedPlayer} key={i} onClick={() => setSelectedPlayer(i)}>
+        <ListGroup.Item className='text-center pointer player-item' active={i === selectedPlayer} key={i} onClick={() => setSelectedPlayer(i)}>
             {p}
         </ListGroup.Item>
     ))
@@ -115,7 +115,7 @@ export default function Registration(props) {
     const packagesOptions = [<option key={-1} value={-1} disabled={true}>Выбрать пакет...</option>,
     ...packages.map(p => <option key={p.id} value={p.id}>{p.title}</option>)]
 
-    const answerSecondsOptions = ANSWER_SECONDS.map(as => <option key={as} value={as}>{as === -1 ? 'Не ограничено' : as}</option>)
+    const answerSecondsOptions = ANSWER_SECONDS.map(as => <option key={as} value={as}>{as === -1 ? 'Время на ответ не ограничено' : `${as} с`}</option>)
 
 
     return (
@@ -138,7 +138,7 @@ export default function Registration(props) {
 
                         <Form.Group as={Row}>
                             <Col sm='6'>
-                                <Button variant='success' onClick={handlePlus} block>Добавить игрока</Button>
+                                <Button variant='warning' onClick={handlePlus} block>Добавить игрока</Button>
                             </Col>
                             <Col sm='6'>
                                 <Button variant='danger' onClick={handleRemove} block
@@ -151,7 +151,7 @@ export default function Registration(props) {
                         <Form.Group as={Row}>
                             <Col>
                                 <ToggleButtonGroup type="radio" name="packageSource" value={packageSource} onChange={handleChangePackageSource}
-                                    className='d-flex'>
+                                    className='package-source-group d-flex'>
                                     <ToggleButton variant='outline-secondary' value={0}>Вопросы из локального файла</ToggleButton>
                                     <ToggleButton variant='outline-secondary' value={1}>Вопросы из базы <strong>db.chgk.info</strong></ToggleButton>
                                 </ToggleButtonGroup>
@@ -185,36 +185,35 @@ export default function Registration(props) {
 
 
                         <Form.Group as={Row}>
-                            <Form.Label column sm='6' className='reg-label'>Время на ответ (в секундах)</Form.Label>
-                            <Col sm='6'>
+                            <Col>
                                 <Form.Control as="select" value={limitedTime} onChange={(e) => setLimitedTime(+e.target.value)}>
                                     {answerSecondsOptions}
                                 </Form.Control>
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row}>
-                            <Col>
-                                <Link className='start-game-link'
-                                    to={{
-                                        pathname: '/',
-                                        playersNames: players,
-                                        limitedTime: limitedTime,
-                                        questionsPackage: questionPackage
-                                    }}>
-                                    <Button variant='primary' disabled={!questionPackage || players.length === 0} block
-                                        title={
-                                            players.length === 0
-                                                ? 'Добавьте хотя бы одного игрока'
-                                                : !questionPackage
-                                                    ? 'Выберите игровой пакет'
-                                                    : ''
-                                        }>
-                                        Начать игру
-                                    </Button>
-                                </Link>
-                            </Col>
-                        </Form.Group>
+                        <div className='d-flex'>
+                            <Link className='no-decoration ml-auto'
+                                to={{
+                                    pathname: '/',
+                                    playersNames: players,
+                                    limitedTime: limitedTime,
+                                    questionsPackage: questionPackage
+                                }}>
+                                <Button disabled={!questionPackage || players.length === 0}
+                                    className='btn btn-warning start-game-button rounded-circle'
+                                    title={
+                                        players.length === 0
+                                            ? 'Добавьте хотя бы одного игрока'
+                                            : !questionPackage
+                                                ? 'Выберите игровой пакет'
+                                                : ''
+                                    }>
+                                    Старт
+                                </Button>
+                            </Link>
+                        </div>
+                           
 
                     </Form>
 
@@ -240,7 +239,7 @@ export default function Registration(props) {
                                 value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} />
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="primary" onClick={handleAddNewPlayer} disabled={newPlayerName === ''}>
+                            <Button variant="warning" onClick={handleAddNewPlayer} disabled={newPlayerName === ''}>
                                 Принять
                             </Button>
                             <Button variant="secondary" onClick={handleHideNewPlayer}>

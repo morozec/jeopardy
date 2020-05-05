@@ -5,14 +5,14 @@ function TopicRow(props) {
 
     const valuesCells = values.map((v, questionIndex) =>
         rowPlayedQuestions[questionIndex] !== 1 ?
-            <div key={questionIndex} className="cell-value" onClick={() => handleQuestionSelect(topicIndex, questionIndex)}>
+            <div key={questionIndex} className="cell-value pointer" onClick={() => handleQuestionSelect(topicIndex, questionIndex)}>
                 {v * round}
             </div> :
             <div key={questionIndex} className="cell-empty"></div>)
 
     return (
-        <div className='TopicRow'>
-            <div className="Topic">{topic.name}</div>
+        <div className='topicRow'>
+            <div className="topicName">{topic.name}</div>
             {valuesCells}
         </div>
     )

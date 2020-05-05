@@ -1,67 +1,80 @@
 import React, { useState } from 'react'
-
-import correctImg from './../img/correct.png'
-import wrongImg from './../img/wrong.png'
-import { Button } from 'react-bootstrap'
+import { Button, Modal, Form } from 'react-bootstrap'
 
 export default function Score(props) {
 
     const { players, canAnswer, handlePlayerAnswer, playersAnswers, changeScore, setShowFinalScore, questionValue } = props
-    const [isEditMode, setIsEditMode] = useState(new Array(players.length).fill(0))
-    const [editingScore, setEditingScore] = useState(0)
-
-    // useEffect(() => {
-    //     document.addEventListener('keydown', handleKeyDown, false)
-    //     return () => document.removeEventListener('keydown', handleKeyDown, false)
-    // }, [])
-
-    const handleEdit = (e) => {        
-        setEditingScore(+e.target.value)
-    }
+    const [editingScore, setEditingScore] = useState(0);
+    const [editingIndex, setEditingIndex] = useState(-1);
+    const [showEditScore, setShowEditScore] = useState(false);
 
     const handleStartEdit = (score, index) => {
-        setEditingScore(score)
-
-        const newIsEditMode = Object.assign([], isEditMode)
-        newIsEditMode[index] = 1
-        setIsEditMode(newIsEditMode)
+        setEditingScore(score);
+        setEditingIndex(index);
+        setShowEditScore(true);
     }
-
-    const finishScoreChange = (index, isAccept) =>{
-        if (isAccept) changeScore(index, editingScore)
-        setIsEditMode(new Array(players.length).fill(0))
-    }
-
-    const handleKeyDown = (e, index) =>{
-        if (e.key === 'Escape') finishScoreChange(index, false)
-        else if (e.key === 'Enter') finishScoreChange(index, true)
-    }
-
+   
     const playersScores = players.map((p, i) => (
-        <div key={i} className={`player-info ${p.isActive ? 'is-current' : ''}`} onKeyDown={(e) => handleKeyDown(e, i)}>
+        <div key={i} className={`player-info ${p.isActive ? 'is-current' : ''}`}>
 
-            {canAnswer && <img src={wrongImg} alt='wrong'
-                className={`pa-button ${playersAnswers[i] !== 0 || playersAnswers.some(a => a === 1) ? 'disabled' : ''}`}
-                onClick={() => handlePlayerAnswer(i, false, questionValue)} />}
+            <div className='player-name'>{p.name}</div>
 
-            <div>{p.name}</div>
-            {isEditMode[i]===0 && <div className='player-score' onDoubleClick={() => handleStartEdit(p.score, i)}>{p.score}</div>}
-            {isEditMode[i]===1 && <input type="text" value={editingScore} onChange={handleEdit} autoFocus/>}
-            {isEditMode[i]===1 && <Button onClick={() => finishScoreChange(i, true)}>Ok</Button>}
-            {isEditMode[i]===1 && <Button onClick={() => finishScoreChange(i, false)}>Отмена</Button>}
+            {canAnswer && <Button
+                className='btn btn-danger rounded-circle change-score-button'
+                disabled={playersAnswers[i] !== 0 || playersAnswers.some(a => a === 1)}
+                onClick={() => handlePlayerAnswer(i, false, questionValue)}
+            >
+                <strong>-</strong>
+            </Button>}
 
-            {canAnswer && <img src={correctImg} alt='correct'
-                className={`pa-button ${playersAnswers[i] !== 0 || playersAnswers.some(a => a === 1) ? 'disabled' : ''}`}
-                onClick={() => handlePlayerAnswer(i, true, questionValue)} />}
+            <div className='player-score pointer' onClick={() => handleStartEdit(p.score, i)}>{p.score}</div>
+
+            {canAnswer && <Button
+                className='btn btn-warning rounded-circle change-score-button'
+                disabled={playersAnswers[i] !== 0 || playersAnswers.some(a => a === 1)}
+                onClick={() => handlePlayerAnswer(i, true, questionValue)}
+            >
+                <strong>+</strong>
+            </Button>}
 
         </div>
     ))
+
+    const handleHideEditScore = () => setShowEditScore(false);
+
+    const handleEditingScoreLoad = () => {
+        const editingScore = document.getElementById('editing-score');
+        editingScore.select();
+    }
+
+    const handleEditScore = () => {
+        changeScore(editingIndex, editingScore);
+        setShowEditScore(false);
+    }
 
 
     return (
         <div className='player-info-container'>
             {playersScores}
-            <Button variant='secondary' onClick={() => setShowFinalScore(true)}>Закончить раунд</Button>
+            <Button variant='danger' onClick={() => setShowFinalScore(true)}>Закончить раунд</Button>
+
+            <Modal show={showEditScore} onHide={handleHideEditScore} centered onShow={handleEditingScoreLoad}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Изменение счета</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Control id='editing-score' type="number"
+                        value={editingScore} onChange={(e) => setEditingScore(+e.target.value)} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="warning" onClick={handleEditScore}>
+                        Принять
+                        </Button>
+                    <Button variant="secondary" onClick={handleHideEditScore}>
+                        Отмена
+                        </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

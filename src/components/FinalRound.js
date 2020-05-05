@@ -17,7 +17,7 @@ export default function FinalRound(props) {
     }
 
     const topics = questions.map(q => (
-        <Button key={q.id} block className='final-round-topics' onClick={() => handleTopicClick(q.id)}>{q.topicName}</Button>
+        <Button key={q.id} block variant='warning mt-2 mb-2 btn-lg' onClick={() => handleTopicClick(q.id)}>{q.topicName}</Button>
     ))
 
     return (

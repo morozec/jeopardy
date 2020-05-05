@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, ProgressBar } from 'react-bootstrap'
 
 export default function Question(props) {
-    const { topic, question, answer, limitedTime, goToGameBoard, playersAnswers, isFinalRound } = props
+    const { question, answer, limitedTime, goToGameBoard, playersAnswers, isFinalRound } = props
     const [showAnswer, setShowAnswer] = useState(false)
     const [timeLeft, setTimeLeft] = useState(limitedTime)
     const [isPause, setIsPause] = useState(false)
@@ -12,7 +12,7 @@ export default function Question(props) {
 
     useEffect(() => {
         if (needShowAnswer) return;
-        if (timeLeft <= 0) return;  
+        if (timeLeft <= 0) return;
 
         if (isPause) return;
         const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -28,21 +28,23 @@ export default function Question(props) {
         setShowAnswer(true)
     }
 
-   
+
     return (
-        <div className="Question">
-            <div>{topic}</div>
-            <div>{question}</div>
+        <div className="question">
+            <div className='question-title'>{question}</div>
 
-            <div className={needShowAnswer ? '' : 'question-answer'} onClick={handleAnswerClick}>{ needShowAnswer ? answer : '???'}</div>
+            <div className={`answer ${!needShowAnswer ? 'hidden' : ''}`}>{answer}</div>
 
-            {goToGameBoard && <Button disabled={!needShowAnswer} onClick={() => goToGameBoard()}>Главный экран</Button>}
+            {limitedTime !== -1 &&
+                <ProgressBar animated variant='danger' className='pointer'
+                    now={limitedTime - timeLeft} min={0} max={limitedTime}
+                    onClick={handlePauseClick}
+                />
+            }
 
-            {limitedTime !== -1 && timeLeft > 0 && !needShowAnswer &&
-                <div>
-                    <label>{`Осталось секунд: ${timeLeft}`}</label>
-                    <Button disabled={timeLeft === 0} onClick={handlePauseClick}>{isPause ? 'Продолжить' : 'Пауза'}</Button>
-                </div>}
+            {!needShowAnswer && <Button variant='warning' block onClick={handleAnswerClick}>Показать ответ</Button>}
+            {needShowAnswer && goToGameBoard && <Button variant='warning' block onClick={() => goToGameBoard()}>Главный экран</Button>}
+
         </div>
     )
 }

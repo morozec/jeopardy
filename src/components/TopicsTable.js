@@ -4,8 +4,8 @@ export default function TopicsTable(props){
     const { topics, hideAllTopics } = props
   
     return(
-        <div className='topics-grid' onClick={hideAllTopics}>
-            {topics.map((t,i) => <div className='topics-grid-cell' key={i}>{t}</div>)}
+        <div className='topics-table' onClick={hideAllTopics}>
+            {topics.map((t,i) => <div className='topics-table-cell' key={i}>{t}</div>)}
         </div>
     )
 }
