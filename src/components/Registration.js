@@ -8,9 +8,9 @@ import { parseSelectedPackage, parseUserFile } from '../helpers/parsers';
 import { corsProxy, groupsApi, ANSWER_SECONDS } from '../helpers/constants'
 
 export default function Registration(props) {
-    const [players, setPlayers] = useState(['Игрок 1'])
+    const [players, setPlayers] = useState([])
     const [selectedPlayer, setSelectedPlayer] = useState(-1)
-    const [lastPlayerIndex, setLastPlayerIndex] = useState(1)
+    const [lastPlayerIndex, setLastPlayerIndex] = useState(0)
     const [showNewPlayer, setShowNewPlayer] = useState(false)
     const [newPlayerName, setNewPlayerName] = useState('');
 
@@ -181,7 +181,7 @@ export default function Registration(props) {
                     <div className='d-flex mt-2 mb-4'>
                         <Button variant='success' className='half-width mr-1' onClick={handlePlus}>Добавить</Button>
                         <Button variant='danger' className='half-width ml-1' onClick={handleRemove}
-                            disabled={players.length <= 1 || selectedPlayer < 0 || selectedPlayer >= players.length}>
+                            disabled={selectedPlayer < 0 || selectedPlayer >= players.length}>
                             Удалить
                         </Button>
                     </div>
