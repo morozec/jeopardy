@@ -225,7 +225,7 @@ export default function Registration(props) {
                     </Form.Group>
 
 
-                    <Link
+                    <Link className='start-game-link'
                         to={{
                             pathname: '/',
                             playersNames: players,
