@@ -174,75 +174,98 @@ export default function Registration(props) {
 
                 <Container>
 
-                    <ListGroup>
-                        {playersInputs}
-                    </ListGroup>
+                    <Form>
 
-                    <div className='d-flex mt-2 mb-4'>
-                        <Button variant='success' className='half-width mr-1' onClick={handlePlus}>Добавить</Button>
-                        <Button variant='danger' className='half-width ml-1' onClick={handleRemove}
-                            disabled={selectedPlayer < 0 || selectedPlayer >= players.length}>
-                            Удалить
-                        </Button>
-                    </div>
-
-
-                    <ToggleButtonGroup type="radio" name="packageSource" value={packageSource} onChange={handleChangePackageSource}
-                        className='d-flex mb-2'>
-                        <ToggleButton variant='outline-secondary' value={0}>Вопросы из локального файла</ToggleButton>
-                        <ToggleButton variant='outline-secondary' value={1}>Вопросы из базы <strong>db.chgk.info</strong></ToggleButton>
-                    </ToggleButtonGroup>
-
-
-                    {packageSource === 0 &&
-                        <div className='d-flex mb-4'>
-                            <div className="custom-file half-width mr-1 ">
-                                <input type="file" className="custom-file-input pointer" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
-                                <label className="custom-file-label" htmlFor="packageFile" data-browse="Обзор...">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
-                            </div>
-                            <div className='half-width ml-1'>
-                                <Button variant='secondary' href='/package.json' block download>Скачать шаблон</Button>
-                            </div>
-                        </div>
-                    }
-
-                    {packageSource === 1 &&
-                        <Form.Group className='mb-4'>
-                            <Form.Control as="select" value={selectedPackegeId} onChange={handleSelectedPackageChanged}>
-                                {packagesOptions}
-                            </Form.Control>
+                        <Form.Group as={Row}>
+                            <Col>
+                                <ListGroup>
+                                    {playersInputs}
+                                </ListGroup>
+                            </Col>
                         </Form.Group>
-                    }
 
 
-                    <Form.Group as={Row} className='mb-4'>
-                        <Form.Label column sm='6'>Время на ответ (в секундах)</Form.Label>
-                        <Col sm='6'>
-                            <Form.Control as="select" value={limitedTime} onChange={(e) => setLimitedTime(+e.target.value)}>
-                                {answerSecondsOptions}
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
+                        <Form.Group as={Row}>
+                            <Col sm='6'>
+                                <Button variant='success' onClick={handlePlus} block>Добавить игрока</Button>
+                            </Col>
+                            <Col sm='6'>
+                                <Button variant='danger' onClick={handleRemove} block
+                                    disabled={selectedPlayer < 0 || selectedPlayer >= players.length}>
+                                    Удалить игрока
+                                </Button>
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row}>
+                            <Col>
+                                <ToggleButtonGroup type="radio" name="packageSource" value={packageSource} onChange={handleChangePackageSource}
+                                    className='d-flex'>
+                                    <ToggleButton variant='outline-secondary' value={0}>Вопросы из локального файла</ToggleButton>
+                                    <ToggleButton variant='outline-secondary' value={1}>Вопросы из базы <strong>db.chgk.info</strong></ToggleButton>
+                                </ToggleButtonGroup>
+                            </Col>
+                        </Form.Group>
 
 
-                    <Link className='start-game-link'
-                        to={{
-                            pathname: '/',
-                            playersNames: players,
-                            limitedTime: limitedTime,
-                            questionsPackage: questionPackage
-                        }}>
-                        <Button variant='primary' disabled={!questionPackage} block
-                            title={
-                                players.length === 0
-                                    ? 'Добавьте хотя бы одного игрока'
-                                    : !questionPackage
-                                        ? 'Выберите игровой пакет'
-                                        : ''
-                            }>
-                            Начать игру
-                        </Button>
-                    </Link>
+                        {packageSource === 0 &&
+                            <Form.Group as={Row}>
+                                <Col sm='6'>
+                                    <div className="custom-file">
+                                        <input type="file" className="custom-file-input pointer" id="packageFile" accept='.json' onChange={handleUserLoadFile} required />
+                                        <label className="custom-file-label" htmlFor="packageFile" data-browse="Обзор...">{userFileName !== '' ? userFileName : 'Выбрать файл с вопросами'}</label>
+                                    </div>
+                                </Col>
+                                <Col sm='6'>
+                                    <Button variant='secondary' href='/package.json' block download>Скачать шаблон</Button>
+                                </Col>
+                            </Form.Group>
+                        }
+
+                        {packageSource === 1 &&
+                            <Form.Group as={Row}>
+                                <Col>
+                                    <Form.Control as="select" value={selectedPackegeId} onChange={handleSelectedPackageChanged}>
+                                        {packagesOptions}
+                                    </Form.Control>
+                                </Col>
+                            </Form.Group>
+                        }
+
+
+                        <Form.Group as={Row}>
+                            <Form.Label column sm='6'>Время на ответ (в секундах)</Form.Label>
+                            <Col sm='6'>
+                                <Form.Control as="select" value={limitedTime} onChange={(e) => setLimitedTime(+e.target.value)}>
+                                    {answerSecondsOptions}
+                                </Form.Control>
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row}>
+                            <Col>
+                                <Link className='start-game-link'
+                                    to={{
+                                        pathname: '/',
+                                        playersNames: players,
+                                        limitedTime: limitedTime,
+                                        questionsPackage: questionPackage
+                                    }}>
+                                    <Button variant='primary' disabled={!questionPackage} block
+                                        title={
+                                            players.length === 0
+                                                ? 'Добавьте хотя бы одного игрока'
+                                                : !questionPackage
+                                                    ? 'Выберите игровой пакет'
+                                                    : ''
+                                        }>
+                                        Начать игру
+                                    </Button>
+                                </Link>
+                            </Col>
+                        </Form.Group>
+
+                    </Form>
 
 
                     <Modal show={showGames} onHide={handleHideGames} centered>
