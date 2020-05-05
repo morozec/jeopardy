@@ -202,7 +202,7 @@ export default function Registration(props) {
                                         limitedTime: limitedTime,
                                         questionsPackage: questionPackage
                                     }}>
-                                    <Button variant='primary' disabled={!questionPackage} block
+                                    <Button variant='primary' disabled={!questionPackage || players.length === 0} block
                                         title={
                                             players.length === 0
                                                 ? 'Добавьте хотя бы одного игрока'
