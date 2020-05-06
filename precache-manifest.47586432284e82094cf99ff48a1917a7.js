@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a69a03f4a93d162e5b345624c29e313b",
+    "revision": "7ba6bad11feebfb88c981c247b32e236",
     "url": "/jeopardy/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/jeopardy/static/css/2.67123b20.chunk.css"
   },
   {
-    "revision": "add80ce0724f38a270cb",
+    "revision": "6f1c926731d8f472af12",
     "url": "/jeopardy/static/css/main.4ef4a5b5.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/jeopardy/static/js/2.021ba3c8.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "add80ce0724f38a270cb",
-    "url": "/jeopardy/static/js/main.c505a424.chunk.js"
+    "revision": "6f1c926731d8f472af12",
+    "url": "/jeopardy/static/js/main.308f1e5c.chunk.js"
   },
   {
     "revision": "2dd67a3c34aa670daee5",
