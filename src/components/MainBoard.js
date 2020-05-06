@@ -56,18 +56,15 @@ function MainBoard(props) {
         return null
     }
 
-    const updateScore = (playerIndex, addScore, isCorrect, isSpecialQuestion) => {
+    const updateScore = (playerIndex, addScore, isCorrect) => {
         const newPlayers = Object.assign([], players)
         if (isCorrect) {
-            newPlayers[playerIndex].score += addScore
-        } else {
-            newPlayers[playerIndex].score -= addScore;
-        }
-
-        if (isCorrect || isSpecialQuestion) {
+            newPlayers[playerIndex].score += addScore;
             for (let i = 0; i < newPlayers.length; ++i) {
                 newPlayers[i].isActive = (i === playerIndex)
             }
+        } else {
+            newPlayers[playerIndex].score -= addScore;
         }
         setPlayers(newPlayers)
     }
