@@ -4,7 +4,7 @@ import TopicsTable from './TopicsTable';
 import Round from './Round';
 import GameBoard from './GameBoard'
 
-import { ROUNDS_COUNT, SHOW_ROUND_TIME_MSECS } from './../helpers/constants'
+import { ROUNDS_COUNT } from './../helpers/constants'
 import FinalRound from './FinalRound';
 import FinalScore from './FinalScore';
 
@@ -30,10 +30,9 @@ function MainBoard(props) {
     const hideAllTopics = () => {
         setShowAllTopics(false)
         setShowRound(true)
-        setTimeout(() => {
-            setShowRound(false)
-        }, SHOW_ROUND_TIME_MSECS)
     }
+
+    const hideRound = () => setShowRound(false);
 
     const updateRound = () => {
         if (!isFinalRound) {
@@ -48,11 +47,7 @@ function MainBoard(props) {
                     np.isActive = false;
                 }
                 setPlayers(newPlayers);
-            }
-
-            setTimeout(() => {
-                setShowRound(false)
-            }, SHOW_ROUND_TIME_MSECS)
+            }           
         }
     }
 
@@ -90,7 +85,7 @@ function MainBoard(props) {
             ? <TopicsTable topics={topics} hideAllTopics={hideAllTopics} />
             : showRound
 
-                ? <Round round={round} />
+                ? <Round round={round} hideRound={hideRound}/>
                 : showFinalScore
                     ? <FinalScore players={players} updateRound={updateRound} isFinalRound={isFinalRound} />
                     : round <= ROUNDS_COUNT
