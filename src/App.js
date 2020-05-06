@@ -20,13 +20,11 @@ function App() {
       <div className="App">
 
         <Switch>
-          {/* <Route exact path="/question" render={(props) => <Question {...props} xxx={true} />} /> */}
-
-          <Route exact path="/reg">
+          <Route exact path="/game" render={(props) => <MainBoard {...props} />} />        
+          
+          <Route path="/">
             <Registration />
-          </Route>
-
-          <Route path="/" render={(props) => <MainBoard {...props} />} />         
+          </Route> 
 
         </Switch>
       </div>

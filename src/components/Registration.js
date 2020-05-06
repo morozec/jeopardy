@@ -195,7 +195,7 @@ export default function Registration(props) {
                         <div className='d-flex'>
                             <Link className='no-decoration ml-auto'
                                 to={{
-                                    pathname: '/',
+                                    pathname: '/game',
                                     playersNames: players,
                                     limitedTime: limitedTime,
                                     questionsPackage: questionPackage

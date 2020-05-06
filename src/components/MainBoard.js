@@ -52,7 +52,7 @@ function MainBoard(props) {
     }
 
     if (!playersNames) {
-        props.history.push('/reg')
+        props.history.push('/')
         return null
     }
 
