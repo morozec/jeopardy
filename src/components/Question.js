@@ -43,7 +43,7 @@ export default function Question(props) {
             }
 
             {!needShowAnswer && <Button variant='warning' block onClick={handleAnswerClick}>Показать ответ</Button>}
-            {needShowAnswer && goToGameBoard && <Button variant='warning' block onClick={() => goToGameBoard()}>Главный экран</Button>}
+            {needShowAnswer && <Button variant='warning' block onClick={() => goToGameBoard()} disabled={!goToGameBoard}>Главный экран</Button>}
 
         </div>
     )
