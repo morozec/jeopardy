@@ -21,7 +21,7 @@ export default function FinalScore(props) {
             </div>
 
             {isFinalRound &&
-                <Link className='no-decoration' to={{pathname: '/reg', }}>
+                <Link className='no-decoration' to={{pathname: '/', }}>
                     <Button variant='warning' block>Новая игра</Button>                    
                 </Link>}
         </div>
