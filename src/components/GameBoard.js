@@ -199,7 +199,7 @@ export default function GameBoard(props) {
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={handlePlayCat} block disabled={players[catPlayerIndex].isActive}>Играть вопрос</Button>
+                        <Button variant='warning' onClick={handlePlayCat} block disabled={players[catPlayerIndex].isActive}>Играть вопрос</Button>
                     </Modal.Footer>
                 </Modal>
 
@@ -231,7 +231,7 @@ export default function GameBoard(props) {
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={handlePlayAuction} block disabled={
+                        <Button variant='warning' onClick={handlePlayAuction} block disabled={
                             !(canPlayAuction(auctionPlayerIndex)
                                 && auctionValue >= getAuctionMinValue(auctionPlayerIndex)
                                 && auctionValue <= getAuctionMaxValue(auctionPlayerIndex))
