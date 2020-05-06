@@ -168,7 +168,7 @@ export default function Registration(props) {
                                     </div>
                                 </Col>
                                 <Col sm='6'>
-                                    <Button variant='secondary' href='/package.json' block download>Скачать шаблон</Button>
+                                    <Button variant='secondary' href='./package.json' block download>Скачать шаблон</Button>
                                 </Col>
                             </Form.Group>
                         }

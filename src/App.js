@@ -15,7 +15,7 @@ function App() {
   //   text: 'qqq'
   // };
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
 
       <div className="App">
 
