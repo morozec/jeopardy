@@ -76,8 +76,7 @@ export default function GameBoard(props) {
 
     const handlePlayerAnswer = (playerIndex, isCorrect, addScore) => {
         if (playersAnswers[playerIndex] !== 0 || playersAnswers.some(a => a === 1)) return
-        const question = roundData.topics[selectedTopicIndex].questions[selectedQuestionIndex];
-        updateScore(playerIndex, addScore, isCorrect, question.isCat || question.isAuction)
+        updateScore(playerIndex, addScore, isCorrect);
 
         const newPlayersAnswers = Object.assign([], playersAnswers)
         newPlayersAnswers[playerIndex] = isCorrect ? 1 : -1
@@ -98,6 +97,7 @@ export default function GameBoard(props) {
         setShowCat(false);
         let playersAnswers = new Array(players.length).fill(null).map((v, i) => i === catPlayerIndex ? 0 : -1);
         setPlayersAnswers(playersAnswers);
+        updateScore(catPlayerIndex, 0, true);//делаем игрока активным
     }
 
 
@@ -120,6 +120,7 @@ export default function GameBoard(props) {
         setShowAuction(false);
         let playersAnswers = new Array(players.length).fill(null).map((v, i) => i === auctionPlayerIndex ? 0 : -1);
         setPlayersAnswers(playersAnswers);
+        updateScore(auctionPlayerIndex, 0, true);//делаем игрока активным
     }
 
     const topicsRows = roundData.topics.map((td, index) =>
