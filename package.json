@@ -2,7 +2,7 @@
   "name": "jeopardy",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://morozec.github.io/Jeopardy",
+  "homepage" : "https://morozec.github.io/jeopardy",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
